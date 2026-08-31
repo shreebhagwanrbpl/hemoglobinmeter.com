@@ -52,7 +52,7 @@ export default function WhyChooseUs() {
 
         {/* Section Title */}
         <SectionTitle
-          badge="Why Choose Us"
+          badge="Why Labs Partner With Our Team"
           title="Trusted Biomedical Excellence"
           description="We deliver innovative diagnostic technologies and biomedical solutions with precision, trust, and unmatched service quality."
           center

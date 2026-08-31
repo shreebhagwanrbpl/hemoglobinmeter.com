@@ -51,18 +51,12 @@ export default function Navbar() {
       <div className="container-custom flex h-20 items-center justify-between">
 
         {/* Logo */}
-        <Link href={makeLink("/")}>
-          <h1 className="text-xl font-bold md:text-2xl">
-
-            <span className="bg-gradient-to-r from-[#0F766E] via-[#0D9488] to-[#14B8A6] bg-clip-text text-transparent">
-              Central
-            </span>
-
-            <span className="text-slate-900">
-              {" "}Biomedicals
-            </span>
-
-          </h1>
+        <Link href={makeLink("/")} className="flex items-center">
+          <img
+            src="/logo.png"
+            alt="Raj Biosis"
+            className="h-11 md:h-14 w-auto object-contain"
+          />
         </Link>
 
 

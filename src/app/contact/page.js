@@ -19,7 +19,7 @@ import {
 import PageBanner from "@/components/PageBanner";
 import CTASection from "@/components/CTASection";
 
-export default function ContactPage() {
+export default function ContactPage({ city = "" }) {
   const [loading, setLoading] = useState(true);
   const [districtData, setDistrictData] =
     useState(null);
@@ -38,6 +38,13 @@ export default function ContactPage() {
     pathParts.length > 0
       ? pathParts[0]
       : null;
+
+  const displayCity = city || (currentDistrict
+    ? currentDistrict
+        .replace(/-/g, " ")
+        .replace(/\b\w/g, (char) => char.toUpperCase())
+    : "");
+
   const handleChange = (e) => {
     setForm({
       ...form,
@@ -84,7 +91,7 @@ export default function ContactPage() {
         collection(
           db,
           "websitesQueries",
-          "centralbiomedicals",
+          "hemoglobinmetercom",
           "contactQueries"
         ),
         {
@@ -129,7 +136,7 @@ export default function ContactPage() {
           doc(
             db,
             "websites",
-            "centralbiomedicals",
+            "hemoglobinmetercom",
             "districts",
             currentDistrict
           )
@@ -152,7 +159,7 @@ export default function ContactPage() {
           doc(
             db,
             "websites",
-            "centralbiomedicals",
+            "hemoglobinmetercom",
             "pages",
             "contact"
           )
@@ -175,73 +182,83 @@ export default function ContactPage() {
 
 
 
-  const phone =
-    contactInfo.find(
-      (x) => x.label === "Phone Number"
-    )?.value || "";
+  const getContactField = (labels, defaultValue) => {
+    const normalized = labels.map((l) => l.toLowerCase().trim());
+    const found = contactInfo.find(
+      (x) => x && x.label && normalized.includes(x.label.toLowerCase().trim())
+    );
+    return found ? found.value : defaultValue;
+  };
 
-  const email =
-    contactInfo.find(
-      (x) => x.label === "Email Address"
-    )?.value || "";
+  const phone = getContactField(
+    ["phone", "phone number", "contact number"],
+    "+91 9983123469\n+91 9983333489"
+  );
 
-  const address =
-    contactInfo.find(
-      (x) => x.label === "Office Address"
-    )?.value || "";
+  const email = getContactField(
+    ["email", "email address", "email for reply"],
+    "rajbiosis@yahoo.in"
+  );
 
-  const hours =
-    contactInfo.find(
-      (x) => x.label === "Working Hours"
-    )?.value || "";
+  const address = getContactField(
+    ["address", "office address"],
+    "F-4, 1st Floor, Plot No. 16, D-Block Tagor Nagar, on Ajmer-Delhi, 200 Feet Bypass Rd, Jaipur, Rajasthan 302021"
+  );
+
+  const hours = getContactField(
+    ["working hours", "hours"],
+    "Mon - Sat (10AM - 6PM)"
+  );
 
   const dynamicAddress =
     districtData
       ? `${districtData.district}, ${districtData.state}, India`
       : address;
 
+  const phoneNumbers = phone ? String(phone).split(/[\n,]+/).map(num => num.trim()).filter(Boolean) : [];
+
   const mapAddress = encodeURIComponent(
     dynamicAddress
   );
   if (loading) {
     return (
-      <section className="section-padding">
-        <div className="container-custom">
+      <div className="site5-static">
+<section className="section-padding bg-slate-50">
+        <div className="container-custom grid lg:grid-cols-2 gap-14">
 
-          <div className="grid lg:grid-cols-2 gap-12">
+          <div className="space-y-6">
+            <div className="h-10 w-48 bg-slate-200 rounded-full animate-pulse mb-8" />
+            <div className="h-14 w-full bg-slate-200 rounded-2xl animate-pulse mb-4" />
+            <div className="h-20 w-full bg-slate-200 rounded-2xl animate-pulse mb-8" />
 
-            <div>
-              <div className="h-12 w-64 bg-slate-200 rounded animate-pulse mb-8" />
+            {[...Array(4)].map((_, i) => (
+              <div
+                key={i}
+                className="h-28 bg-slate-200 rounded-3xl animate-pulse mb-6"
+              />
+            ))}
+          </div>
 
-              {[...Array(4)].map((_, i) => (
-                <div
-                  key={i}
-                  className="h-28 bg-slate-200 rounded-3xl animate-pulse mb-6"
-                />
-              ))}
-            </div>
-
-            <div className="bg-white p-10 rounded-3xl">
-              {[...Array(6)].map((_, i) => (
-                <div
-                  key={i}
-                  className="h-14 bg-slate-200 rounded-2xl animate-pulse mb-5"
-                />
-              ))}
-            </div>
-
+          <div className="bg-white p-10 rounded-3xl">
+            {[...Array(6)].map((_, i) => (
+              <div
+                key={i}
+                className="h-14 bg-slate-200 rounded-2xl animate-pulse mb-5"
+              />
+            ))}
           </div>
 
         </div>
       </section>
+      </div>
     );
   }
   return (
-    <>
+    <div className="site5-static">
       {/* Banner */}
       <PageBanner
-        title="Contact Us"
-        subtitle="Get in touch with Central Biomedicals for premium diagnostic and biomedical solutions."
+        title={displayCity ? `Contact Us in ${displayCity}` : "Contact Us"}
+        subtitle={displayCity ? `Connect with our laboratory equipment team in ${displayCity} for premium diagnostic and biomedical solutions.` : "Connect with our laboratory equipment team for premium diagnostic and biomedical solutions."}
       />
 
       {/* Contact Section */}
@@ -251,114 +268,61 @@ export default function ContactPage() {
           {/* Left Info */}
           <div>
 
+
             {/* Badge */}
-            <span
-              className="
-    inline-flex
-    items-center
-    rounded-full
-    border
-    border-teal-200
-    bg-gradient-to-r
-    from-teal-50
-    via-cyan-50
-    to-emerald-50
-    px-5
-    py-2
-    font-semibold
-    text-[#0F766E]
-    shadow-sm
-    mb-5
-    "
-            >
-              Contact Information
+            <span className="inline-block bg-teal-50 border border-teal-100 text-teal-700 px-5 py-2 rounded-full font-semibold mb-5">
+              {displayCity ? `Contact Information in ${displayCity}` : "Contact Information"}
             </span>
 
 
 
-            {/* Title */}
-            <h2
-              className="
-    section-title
-    bg-gradient-to-r
-    from-[#0F766E]
-    via-[#0D9488]
-    to-[#14B8A6]
-    bg-clip-text
-    text-transparent
-    "
-            >
-              Let’s Start a Conversation
+
+            <h2 className="section-title text-[#2D1B21]">
+              Let’s Start a Conversation{displayCity ? ` in ${displayCity}` : ""}
             </h2>
 
 
 
-            {/* Description */}
-            <p className="section-subtitle text-slate-600">
-              Reach out to us for healthcare consultation,
-              biomedical products, and advanced diagnostic support.
+
+            <p className="section-subtitle text-[#6B4A54]">
+              Reach out to us for
+              healthcare consultation,
+              biomedical products, and
+              advanced diagnostic support.
             </p>
 
 
 
 
+
             {/* Contact Cards */}
-            <div className="mt-10 space-y-6">
+            <div className="space-y-6 mt-10">
+
 
 
               {/* Phone */}
-              <div
-                className="
-      group
-      flex
-      items-start
-      gap-5
-      rounded-[28px]
-      border
-      border-teal-100
-      bg-white
-      p-6
-      shadow-[0_10px_30px_rgba(15,118,110,0.08)]
-      transition-all
-      duration-300
-      hover:-translate-y-1
-      hover:shadow-[0_20px_45px_rgba(15,118,110,0.15)]
-      "
-              >
+              <div className="flex items-start gap-5 bg-slate-50 p-6 rounded-[28px] border border-slate-200 hover:shadow-[0_15px_40px_rgba(13,148,136,0.06)] transition-all duration-300">
 
-                <div
-                  className="
-        flex
-        h-14
-        w-14
-        shrink-0
-        items-center
-        justify-center
-        rounded-2xl
-        bg-gradient-to-br
-        from-[#0F766E]
-        to-[#14B8A6]
-        text-white
-        shadow-lg
-        shadow-teal-200
-        transition
-        group-hover:scale-110
-        "
-                >
+                <div className="w-14 h-14 rounded-2xl bg-teal-50 flex items-center justify-center text-[#0F766E]">
                   <Phone size={24} />
                 </div>
 
 
                 <div>
-                  <h4 className="text-lg font-semibold text-slate-900">
-                    Phone Number
+                  <h4 className="font-semibold text-lg text-slate-900">
+                    Contact Number
                   </h4>
 
-                  <p className="mt-2 text-slate-600">
-                    {phone}
-                  </p>
+                  <div className="space-y-1 mt-2">
+                    {phoneNumbers.map((num, i) => (
+                      <p key={i} className="text-slate-600">
+                        <a href={`tel:${num}`} className="hover:text-[#0F766E] transition">
+                          {num}
+                        </a>
+                      </p>
+                    ))}
+                  </div>
                 </div>
-
 
               </div>
 
@@ -367,58 +331,22 @@ export default function ContactPage() {
 
 
               {/* Email */}
-              <div
-                className="
-      group
-      flex
-      items-start
-      gap-5
-      rounded-[28px]
-      border
-      border-teal-100
-      bg-white
-      p-6
-      shadow-[0_10px_30px_rgba(15,118,110,0.08)]
-      transition-all
-      duration-300
-      hover:-translate-y-1
-      hover:shadow-[0_20px_45px_rgba(15,118,110,0.15)]
-      "
-              >
+              <div className="flex items-start gap-5 bg-slate-50 p-6 rounded-[28px] border border-slate-200 hover:shadow-[0_15px_40px_rgba(13,148,136,0.06)] transition-all duration-300">
 
-                <div
-                  className="
-        flex
-        h-14
-        w-14
-        shrink-0
-        items-center
-        justify-center
-        rounded-2xl
-        bg-gradient-to-br
-        from-[#0F766E]
-        to-[#14B8A6]
-        text-white
-        shadow-lg
-        shadow-teal-200
-        transition
-        group-hover:scale-110
-        "
-                >
+                <div className="w-14 h-14 rounded-2xl bg-teal-50 flex items-center justify-center text-[#0F766E]">
                   <Mail size={24} />
                 </div>
 
 
                 <div>
-                  <h4 className="text-lg font-semibold text-slate-900">
-                    Email Address
+                  <h4 className="font-semibold text-lg text-slate-900">
+                    Email for Reply
                   </h4>
 
-                  <p className="mt-2 break-all text-slate-600">
+                  <p className="text-slate-600 mt-2">
                     {email}
                   </p>
                 </div>
-
 
               </div>
 
@@ -427,58 +355,22 @@ export default function ContactPage() {
 
 
               {/* Address */}
-              <div
-                className="
-      group
-      flex
-      items-start
-      gap-5
-      rounded-[28px]
-      border
-      border-teal-100
-      bg-white
-      p-6
-      shadow-[0_10px_30px_rgba(15,118,110,0.08)]
-      transition-all
-      duration-300
-      hover:-translate-y-1
-      hover:shadow-[0_20px_45px_rgba(15,118,110,0.15)]
-      "
-              >
+              <div className="flex items-start gap-5 bg-slate-50 p-6 rounded-[28px] border border-slate-200 hover:shadow-[0_15px_40px_rgba(13,148,136,0.06)] transition-all duration-300">
 
-                <div
-                  className="
-        flex
-        h-14
-        w-14
-        shrink-0
-        items-center
-        justify-center
-        rounded-2xl
-        bg-gradient-to-br
-        from-[#0F766E]
-        to-[#14B8A6]
-        text-white
-        shadow-lg
-        shadow-teal-200
-        transition
-        group-hover:scale-110
-        "
-                >
+                <div className="w-14 h-14 rounded-2xl bg-teal-50 flex items-center justify-center text-[#0F766E]">
                   <MapPin size={24} />
                 </div>
 
 
                 <div>
-                  <h4 className="text-lg font-semibold text-slate-900">
+                  <h4 className="font-semibold text-lg text-slate-900">
                     Office Address
                   </h4>
 
-                  <p className="mt-2 leading-7 text-slate-600">
+                  <p className="text-slate-600 mt-2">
                     {dynamicAddress}
                   </p>
                 </div>
-
 
               </div>
 
@@ -487,60 +379,25 @@ export default function ContactPage() {
 
 
               {/* Working Hours */}
-              <div
-                className="
-      group
-      flex
-      items-start
-      gap-5
-      rounded-[28px]
-      border
-      border-teal-100
-      bg-white
-      p-6
-      shadow-[0_10px_30px_rgba(15,118,110,0.08)]
-      transition-all
-      duration-300
-      hover:-translate-y-1
-      hover:shadow-[0_20px_45px_rgba(15,118,110,0.15)]
-      "
-              >
+              <div className="flex items-start gap-5 bg-slate-50 p-6 rounded-[28px] border border-slate-200 hover:shadow-[0_15px_40px_rgba(13,148,136,0.06)] transition-all duration-300">
 
-                <div
-                  className="
-        flex
-        h-14
-        w-14
-        shrink-0
-        items-center
-        justify-center
-        rounded-2xl
-        bg-gradient-to-br
-        from-[#0F766E]
-        to-[#14B8A6]
-        text-white
-        shadow-lg
-        shadow-teal-200
-        transition
-        group-hover:scale-110
-        "
-                >
+                <div className="w-14 h-14 rounded-2xl bg-teal-50 flex items-center justify-center text-[#0F766E]">
                   <Clock3 size={24} />
                 </div>
 
 
                 <div>
-                  <h4 className="text-lg font-semibold text-slate-900">
+                  <h4 className="font-semibold text-lg text-slate-900">
                     Working Hours
                   </h4>
 
-                  <p className="mt-2 text-slate-600">
+                  <p className="text-slate-600 mt-2">
                     {hours}
                   </p>
                 </div>
 
-
               </div>
+
 
 
             </div>
@@ -549,38 +406,18 @@ export default function ContactPage() {
           </div>
 
           {/* Right Form */}
-          <div
-            className="
-  rounded-[40px]
-  border
-  border-teal-100
-  bg-white/90
-  p-8
-  shadow-[0_25px_70px_rgba(15,118,110,0.12)]
-  backdrop-blur-xl
-  lg:p-10
-"
-          >
+          <div className="bg-white rounded-[40px] p-8 lg:p-10 border border-slate-200 shadow-[0_20px_60px_rgba(15,23,42,0.06)]">
 
-            {/* Heading */}
-            <h3
-              className="
-    bg-gradient-to-r
-    from-[#0F766E]
-    via-[#0D9488]
-    to-[#14B8A6]
-    bg-clip-text
-    text-3xl
-    font-bold
-    text-transparent
-    "
-            >
-              Send Us Message
+
+            <h3 className="text-3xl font-bold text-slate-900">
+              Request Laboratory Assistance
             </h3>
 
 
-            <p className="mt-3 text-slate-600">
-              Fill out the form and our team will contact you soon.
+
+            <p className="text-slate-600 mt-3">
+              Fill out the form and our
+              team will contact you soon.
             </p>
 
 
@@ -591,27 +428,14 @@ export default function ContactPage() {
             >
 
 
+
               <input
                 type="text"
                 name="name"
-                placeholder="Full Name"
+                placeholder="Name of Contact"
                 value={form.name}
                 onChange={handleChange}
-                className="
-      w-full
-      rounded-2xl
-      border
-      border-teal-100
-      bg-white
-      px-5
-      py-4
-      text-slate-700
-      outline-none
-      transition-all
-      focus:border-[#0F766E]
-      focus:ring-4
-      focus:ring-teal-100
-      "
+                className="w-full border border-slate-200 rounded-2xl px-5 py-4 outline-none text-slate-900 placeholder:text-slate-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 transition"
               />
 
 
@@ -619,24 +443,10 @@ export default function ContactPage() {
               <input
                 type="email"
                 name="email"
-                placeholder="Email Address"
+                placeholder="Email for Reply"
                 value={form.email}
                 onChange={handleChange}
-                className="
-      w-full
-      rounded-2xl
-      border
-      border-teal-100
-      bg-white
-      px-5
-      py-4
-      text-slate-700
-      outline-none
-      transition-all
-      focus:border-[#0F766E]
-      focus:ring-4
-      focus:ring-teal-100
-      "
+                className="w-full border border-slate-200 rounded-2xl px-5 py-4 outline-none text-slate-900 placeholder:text-slate-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 transition"
               />
 
 
@@ -644,7 +454,7 @@ export default function ContactPage() {
               <input
                 type="tel"
                 name="phone"
-                placeholder="Phone Number"
+                placeholder="Contact Number"
                 maxLength={10}
                 value={form.phone}
                 onChange={(e) =>
@@ -653,21 +463,7 @@ export default function ContactPage() {
                     phone: e.target.value.replace(/\D/g, ""),
                   })
                 }
-                className="
-      w-full
-      rounded-2xl
-      border
-      border-teal-100
-      bg-white
-      px-5
-      py-4
-      text-slate-700
-      outline-none
-      transition-all
-      focus:border-[#0F766E]
-      focus:ring-4
-      focus:ring-teal-100
-      "
+                className="w-full border border-slate-200 rounded-2xl px-5 py-4 outline-none text-slate-900 placeholder:text-slate-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 transition"
               />
 
 
@@ -675,24 +471,10 @@ export default function ContactPage() {
               <input
                 type="text"
                 name="subject"
-                placeholder="Subject"
+                placeholder="Equipment Requirement"
                 value={form.subject}
                 onChange={handleChange}
-                className="
-      w-full
-      rounded-2xl
-      border
-      border-teal-100
-      bg-white
-      px-5
-      py-4
-      text-slate-700
-      outline-none
-      transition-all
-      focus:border-[#0F766E]
-      focus:ring-4
-      focus:ring-teal-100
-      "
+                className="w-full border border-slate-200 rounded-2xl px-5 py-4 outline-none text-slate-900 placeholder:text-slate-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 transition"
               />
 
 
@@ -700,25 +482,10 @@ export default function ContactPage() {
               <textarea
                 rows={5}
                 name="message"
-                placeholder="Your Message"
+                placeholder="Explain your laboratory requirement"
                 value={form.message}
                 onChange={handleChange}
-                className="
-      w-full
-      resize-none
-      rounded-2xl
-      border
-      border-teal-100
-      bg-white
-      px-5
-      py-4
-      text-slate-700
-      outline-none
-      transition-all
-      focus:border-[#0F766E]
-      focus:ring-4
-      focus:ring-teal-100
-      "
+                className="w-full border border-slate-200 rounded-2xl px-5 py-4 outline-none text-slate-900 placeholder:text-slate-400 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 transition resize-none"
               />
 
 
@@ -726,30 +493,7 @@ export default function ContactPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="
-      group
-      flex
-      w-full
-      items-center
-      justify-center
-      rounded-2xl
-      bg-gradient-to-r
-      from-[#0F766E]
-      via-[#0D9488]
-      to-[#14B8A6]
-      py-4
-      font-semibold
-      text-white
-      shadow-lg
-      shadow-teal-200
-      transition-all
-      duration-300
-      hover:-translate-y-1
-      hover:shadow-xl
-      hover:shadow-teal-300
-      disabled:cursor-not-allowed
-      disabled:opacity-70
-      "
+                className="w-full bg-gradient-to-r from-[#0F766E] via-[#0D9488] to-[#14B8A6] text-white py-4 rounded-2xl font-semibold hover:shadow-lg hover:shadow-teal-100/50 transition-all duration-300 shadow-md disabled:opacity-70"
               >
 
                 {submitting
@@ -759,7 +503,9 @@ export default function ContactPage() {
               </button>
 
 
+
             </form>
+
 
           </div>
         </div>
@@ -784,6 +530,6 @@ export default function ContactPage() {
 
       {/* CTA */}
       <CTASection />
-    </>
+    </div>
   );
 }

@@ -228,3 +228,18 @@ header {
       transparent);
   animation: shimmer 1.8s infinite;
 }
+
+
+/* SITE 5 — teal glass / clean enterprise */
+.site5-static{--sv-accent:#0f766e;--sv-deep:#134e4a;--sv-soft:#f0fdfa}
+.site5-static h1,.site5-static h2,.site5-static h3{letter-spacing:-.04em}
+.site5-static .container-custom{max-width:1280px}
+.site5-static section:nth-of-type(odd){background:#f0fdfa!important}
+.site5-static .rounded-3xl,.site5-static .rounded-\[40px\]{border-radius:22px!important}
+.site5-static .card-shadow{box-shadow:0 22px 60px rgba(15,118,110,.09)!important}
+.site5-static button{border-radius:12px!important}
+.site5-static input,.site5-static textarea{border-radius:12px!important;background:rgba(255,255,255,.82)!important;backdrop-filter:blur(8px)}
+.site5-static section:has(form) .container-custom{grid-template-columns:1fr 1fr;gap:72px}
+.site5-static section:has(form) .container-custom>div:last-child{border:1px solid #99f6e4;background:rgba(255,255,255,.9)!important}
+.site5-static iframe{border-radius:22px!important}
+

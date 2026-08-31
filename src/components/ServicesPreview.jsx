@@ -53,7 +53,7 @@ export default function ServicesPreview() {
 
         {/* Title */}
         <SectionTitle
-          badge="Our Services"
+          badge="Laboratory Equipment Services"
           title="Premium Diagnostic & Biomedical Services"
           description="Providing advanced healthcare technologies, laboratory systems, and trusted biomedical solutions for modern diagnostics."
           center

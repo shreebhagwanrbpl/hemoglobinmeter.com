@@ -1,46 +1,51 @@
 import ProductDetails from "./ProductDetails";
+import { fetchFullCatalog } from "@/lib/data-fetcher-server";
+import { notFound } from "next/navigation";
+import { SITE_URL, SITE_NAME } from "@/lib/seo";
+import { shouldIndexProduct } from "@/lib/seo-safety";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+const makeSlug = (text = "") =>
+    text
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9\s-]/g, "")
+        .replace(/\s+/g, "-");
 
 export async function generateMetadata({ params }) {
     const { slug } = await params;
 
-    const productName = slug
-        ?.replace(/-/g, " ")
-        ?.replace(/\b\w/g, (c) => c.toUpperCase());
+    const allProducts = await fetchFullCatalog();
+    const product = allProducts.find((p) => p.slug === slug);
 
-    const title = `${productName} Supplier in India | Price, Dealer & Distributor | Central Biomedicals`;
+    if (!product) {
+        return {
+            title: "Product Not Found | " + SITE_NAME,
+            robots: {
+                index: false,
+                follow: false,
+            },
+        };
+    }
 
-    const description = `Buy ${productName} at best price in India. Trusted supplier, dealer and distributor of ${productName} for hospitals, laboratories, diagnostic centers, research institutes and healthcare facilities. Contact Central Biomedicals for latest quotation and product details.`;
+    const isIndexable = shouldIndexProduct(product);
 
-    const url = `https://centralbiomedicals.com/items/${slug}`;
+    const title = `${product.title} ${product.brand ? `by ${product.brand}` : ""
+        } | Price, Specification & Quotation`;
+
+    const description =
+        product.desc ||
+        product.description ||
+        `Buy high-quality ${product.title} ${product.brand ? `by ${product.brand}` : ""
+        } model ${product.model || ""} from Raj Biosis. Trusted laboratory and medical diagnostic equipment supplier.`;
+
+    const url = `${SITE_URL}/items/${slug}`;
 
     return {
         title,
         description,
-
-        keywords: [
-            productName,
-            `${productName} Supplier`,
-            `${productName} Dealer`,
-            `${productName} Distributor`,
-            `${productName} Manufacturer`,
-            `${productName} Exporter`,
-            `${productName} Price`,
-            `${productName} Price in India`,
-            `${productName} Supplier in India`,
-            `${productName} Dealer in India`,
-            `${productName} Distributor in India`,
-            `Buy ${productName}`,
-            `${productName} for Laboratory`,
-            `${productName} for Hospital`,
-            `${productName} for Diagnostic Center`,
-            "Biomedical Equipment",
-            "Medical Equipment",
-            "Laboratory Equipment",
-            "Diagnostic Equipment",
-            "Hospital Equipment",
-            "Healthcare Equipment",
-            "Central Biomedicals",
-        ],
 
         alternates: {
             canonical: url,
@@ -50,8 +55,14 @@ export async function generateMetadata({ params }) {
             title,
             description,
             url,
-            siteName: "Central Biomedicals",
+            siteName: SITE_NAME,
             type: "website",
+            images: [
+                {
+                    url: product.image || "/logo.png",
+                    alt: product.title,
+                },
+            ],
             locale: "en_IN",
         },
 
@@ -59,26 +70,73 @@ export async function generateMetadata({ params }) {
             card: "summary_large_image",
             title,
             description,
+            images: [product.image || "/logo.png"],
         },
 
         robots: {
-            index: true,
-            follow: true,
+            index: isIndexable,
+            follow: isIndexable,
             googleBot: {
-                index: true,
-                follow: true,
+                index: isIndexable,
+                follow: isIndexable,
                 "max-video-preview": -1,
                 "max-image-preview": "large",
                 "max-snippet": -1,
             },
         },
 
-        metadataBase: new URL("https://centralbiomedials.com"),
+        metadataBase: new URL(SITE_URL),
     };
 }
 
 export default async function Page({ params }) {
     const { slug } = await params;
 
-    return <ProductDetails slug={slug} />;
+    const allProducts = await fetchFullCatalog();
+    const product = allProducts.find((p) => p.slug === slug);
+
+    if (!product) {
+        notFound();
+    }
+
+    const breadcrumbSchema = {
+        "@context": "https://schema.org",
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": 1,
+                "name": "Home",
+                "item": SITE_URL
+            },
+            {
+                "@type": "ListItem",
+                "position": 2,
+                "name": "Products",
+                "item": `${SITE_URL}/items`
+            },
+            {
+                "@type": "ListItem",
+                "position": 3,
+                "name": product.category || "Biomedical Equipment",
+                "item": product.category ? `${SITE_URL}/category/${makeSlug(product.category)}` : `${SITE_URL}/items`
+            },
+            {
+                "@type": "ListItem",
+                "position": 4,
+                "name": product.title,
+                "item": `${SITE_URL}/items/${slug}`
+            }
+        ]
+    };
+
+    return (
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+            />
+            <ProductDetails slug={slug} />
+        </>
+    );
 }

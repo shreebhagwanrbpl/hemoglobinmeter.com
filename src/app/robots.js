@@ -1,11 +1,15 @@
-export default function robots() {
-    return {
-        rules: {
-            userAgent: "*",
-            allow: "/",
-        },
+import { SITE_URL } from "@/lib/seo";
 
-        sitemap:
-            "https://centralbiomedicals.com/sitemap.xml",
-    };
+export default function robots() {
+  return {
+    rules: {
+      userAgent: "*",
+      allow: "/",
+    },
+
+    sitemap: [
+      `${SITE_URL}/sitemap.xml`,
+      `${SITE_URL}/product-sitemap.xml`,
+    ],
+  };
 }

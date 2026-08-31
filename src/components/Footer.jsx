@@ -10,13 +10,14 @@ import {
   Phone,
   MapPin,
 } from "lucide-react";
+import { FaFacebookF, FaInstagram } from "react-icons/fa";
+import { fetchFullCatalog } from "@/lib/data-fetcher";
 
 export default function Footer() {
-  const [contactInfo, setContactInfo] =
-    useState([]);
+  const [contactInfo, setContactInfo] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [districtData, setDistrictData] =
-    useState(null);
+  const [districtData, setDistrictData] = useState(null);
+  const [categories, setCategories] = useState([]);
 
   const pathname = usePathname();
 
@@ -45,7 +46,7 @@ export default function Footer() {
           doc(
             db,
             "websites",
-            "centralbiomedicals",
+            "hemoglobinmetercom",
             "pages",
             "contact"
           )
@@ -76,7 +77,7 @@ export default function Footer() {
           doc(
             db,
             "websites",
-            "centralbiomedicals",
+            "hemoglobinmetercom",
             "districts",
             district
           )
@@ -93,25 +94,50 @@ export default function Footer() {
     loadDistrict();
   }, [district]);
 
-  const phone =
-    contactInfo.find(
-      (x) => x.label === "Phone Number"
-    )?.value || "";
+  useEffect(() => {
+    const loadCategories = async () => {
+      try {
+        const catalog = await fetchFullCatalog();
+        const uniqueCategories = Array.from(
+          new Set(catalog.map((item) => item.category).filter(Boolean))
+        );
+        setCategories(uniqueCategories.slice(0, 7));
+      } catch (err) {
+        console.error("Error loading categories in footer:", err);
+      }
+    };
+    loadCategories();
+  }, []);
 
-  const email =
-    contactInfo.find(
-      (x) => x.label === "Email Address"
-    )?.value || "";
+  const getContactField = (labels, defaultValue) => {
+    const normalized = labels.map((l) => l.toLowerCase().trim());
+    const found = contactInfo.find(
+      (x) => x && x.label && normalized.includes(x.label.toLowerCase().trim())
+    );
+    return found ? found.value : defaultValue;
+  };
 
-  const address =
-    contactInfo.find(
-      (x) => x.label === "Office Address"
-    )?.value || "";
+  const phone = getContactField(
+    ["phone", "phone number", "contact number"],
+    "+91 9983123469\n+91 9983333489"
+  );
+
+  const email = getContactField(
+    ["email", "email address", "email for reply"],
+    "rajbiosis@yahoo.in"
+  );
+
+  const address = getContactField(
+    ["address", "office address"],
+    "F-4, 1st Floor, Plot No. 16, D-Block Tagor Nagar, on Ajmer-Delhi, 200 Feet Bypass Rd, Jaipur, Rajasthan 302021"
+  );
 
   const dynamicAddress =
     districtData
       ? `${districtData.district}, ${districtData.state}, India`
       : address;
+
+  const phoneNumbers = phone ? String(phone).split(/[\n,]+/).map(num => num.trim()).filter(Boolean) : [];
 
   const makeLink = (path) => {
     if (!district) return path;
@@ -122,6 +148,7 @@ export default function Footer() {
 
     return `/${district}${path}`;
   };
+
   if (loading) {
     return (
       <footer className="bg-white border-t border-slate-200">
@@ -152,103 +179,104 @@ export default function Footer() {
       </footer>
     );
   }
+
   return (
-    <footer className="relative overflow-hidden bg-gradient-to-br from-[#F0FDFA] via-white to-[#ECFEFF]">
+    <footer className="bg-slate-50 border-t border-slate-200">
+      <div className="container-custom py-16">
 
-      {/* Background Glow */}
-      <div className="absolute -left-32 -top-32 h-96 w-96 rounded-full bg-teal-200/30 blur-[140px]" />
-
-      <div className="absolute -bottom-32 -right-32 h-96 w-96 rounded-full bg-cyan-200/30 blur-[140px]" />
-
-
-      <div className="container-custom relative z-10 py-16">
-
-
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
+        <div className="grid lg:grid-cols-4 md:grid-cols-2 gap-10">
 
 
           {/* Brand */}
           <div>
 
-            <h2 className="text-3xl font-bold">
-
-              <span className="bg-gradient-to-r from-[#0F766E] via-[#0D9488] to-[#14B8A6] bg-clip-text text-transparent">
-                Central
-              </span>
-
+            <h2 className="text-2xl font-bold text-[#0F766E]">
+              Raj
               <span className="text-slate-900">
-                {" "}Biomedicals
+                {" "}Biosis
               </span>
-
             </h2>
 
 
-            <p className="mt-5 max-w-xs leading-7 text-slate-600">
-              Delivering trusted diagnostic and biomedical solutions with
-              innovation, quality, and precision healthcare support.
+            <p className="mt-5 text-slate-600 leading-7">
+              Delivering trusted diagnostic
+              and biomedical solutions with
+              innovation, quality, and
+              precision healthcare support.
             </p>
 
-
-            <div className="mt-7 flex gap-3">
-
-
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-teal-600 to-cyan-500 text-white shadow-lg shadow-teal-200 transition hover:-translate-y-1">
-
-                <Phone size={18} />
-
-              </div>
-
-
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-teal-600 to-cyan-500 text-white shadow-lg shadow-teal-200 transition hover:-translate-y-1">
-
-                <Mail size={18} />
-
-              </div>
-
-
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-teal-600 to-cyan-500 text-white shadow-lg shadow-teal-200 transition hover:-translate-y-1">
-
-                <MapPin size={18} />
-
-              </div>
-
-
+            {/* Social Icons */}
+            <div className="flex gap-4 mt-6">
+              <a
+                href="https://www.facebook.com/rajbiosispvtltd/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-[#0F766E] hover:bg-[#0F766E] hover:text-white transition shadow-sm"
+              >
+                <FaFacebookF size={18} />
+              </a>
+              <a
+                href="https://www.instagram.com/rajbiosisindia/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-10 h-10 rounded-xl bg-white border border-slate-200 flex items-center justify-center text-[#0F766E] hover:bg-[#0F766E] hover:text-white transition shadow-sm"
+              >
+                <FaInstagram size={18} />
+              </a>
             </div>
-
 
           </div>
 
 
 
           {/* Quick Links */}
-          <div>
+          <div className="w-fit">
 
-            <h3 className="mb-6 text-lg font-bold text-slate-900">
+            <h3 className="text-lg font-semibold mb-5 text-slate-900">
               Quick Links
             </h3>
 
 
-            <div className="space-y-4 text-slate-600">
+            <div className="flex w-fit flex-col gap-3 text-slate-600">
+
+              <Link
+                href={makeLink("/")}
+                className="hover:text-[#0F766E] transition"
+              >
+                Home
+              </Link>
 
 
-              {[
-                ["Home", "/"],
-                ["About", "/about"],
-                ["Services", "/services"],
-                ["Products", "/items"],
-                ["Contact", "/contact"]
-              ].map(([name, path]) => (
+              <Link
+                href={makeLink("/about")}
+                className="hover:text-[#0F766E] transition"
+              >
+                About
+              </Link>
 
-                <Link
-                  key={name}
-                  href={makeLink(path)}
-                  className="block transition hover:translate-x-1 hover:text-[#0F766E]"
-                >
-                  {name}
-                </Link>
 
-              ))}
+              <Link
+                href={makeLink("/services")}
+                className="hover:text-[#0F766E] transition"
+              >
+                Services
+              </Link>
 
+
+              <Link
+                href={makeLink("/items")}
+                className="hover:text-[#0F766E] transition"
+              >
+                Products
+              </Link>
+
+
+              <Link
+                href={makeLink("/contact")}
+                className="hover:text-[#0F766E] transition"
+              >
+                Contact
+              </Link>
 
             </div>
 
@@ -256,37 +284,35 @@ export default function Footer() {
 
 
 
+          {/* Categories */}
+          <div className="w-fit">
 
-          {/* Services */}
-          <div>
-
-            <h3 className="mb-6 text-lg font-bold text-slate-900">
-              Services
+            <h3 className="text-lg font-semibold mb-5 text-slate-900">
+              Our Categories
             </h3>
 
+            <div className="flex w-fit flex-col gap-3 text-slate-600">
 
-            <div className="space-y-4 text-slate-600">
+              {categories.map((cat) => (
+                <Link
+                  key={cat}
+                  href={makeLink(
+                    `/items#${cat.replace(/\s+/g, "-").toLowerCase()}`
+                  )}
+                  className="w-fit hover:text-[#0F766E] transition text-left"
+                >
+                  {cat}
+                </Link>
+              ))}
 
-              <p className="hover:text-[#0F766E]">
-                Diagnostic Equipment
-              </p>
-
-              <p className="hover:text-[#0F766E]">
-                Laboratory Solutions
-              </p>
-
-              <p className="hover:text-[#0F766E]">
-                Biomedical Instruments
-              </p>
-
-              <p className="hover:text-[#0F766E]">
-                AMC & Maintenance
-              </p>
-
-              <p className="hover:text-[#0F766E]">
-                Installation Support
-              </p>
-
+              {categories.length === 0 && (
+                <>
+                  <p>Diagnostic Equipment</p>
+                  <p>Laboratory Solutions</p>
+                  <p>Biomedical Instruments</p>
+                  <p>Maintenance Support</p>
+                </>
+              )}
 
             </div>
 
@@ -299,23 +325,33 @@ export default function Footer() {
           {/* Contact */}
           <div>
 
-
-            <h3 className="mb-6 text-lg font-bold text-slate-900">
+            <h3 className="text-lg font-semibold mb-5 text-slate-900">
               Contact Info
             </h3>
 
 
+            <div className="space-y-4 text-slate-600">
 
-            <div className="space-y-5">
 
+              <div className="flex items-start gap-4">
 
-              <div className="flex gap-4">
-
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-teal-100 text-[#0F766E]">
-                  <MapPin size={20} />
+                <div className="
+    w-12
+    h-12
+    rounded-2xl
+    bg-teal-50
+    flex
+    items-center
+    justify-center
+    flex-shrink-0
+  ">
+                  <MapPin
+                    size={24}
+                    className="text-[#0F766E]"
+                  />
                 </div>
 
-                <p className="text-sm leading-7 text-slate-600">
+                <p className="leading-7 pt-2">
                   {dynamicAddress}
                 </p>
 
@@ -323,32 +359,39 @@ export default function Footer() {
 
 
 
-              <div className="flex items-center gap-4">
 
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-teal-100 text-[#0F766E]">
-                  <Phone size={18} />
-                </div>
-
-                <p className="text-slate-600">
-                  {phone}
-                </p>
-
+              <div className="flex flex-col gap-2">
+                {phoneNumbers.map((num, i) => (
+                  <div key={i} className="flex items-center gap-3">
+                    <Phone
+                      size={18}
+                      className="text-[#0F766E] flex-shrink-0"
+                    />
+                    <a href={`tel:${num}`} className="hover:text-[#0F766E] transition">
+                      {num}
+                    </a>
+                  </div>
+                ))}
               </div>
 
 
 
 
-              <div className="flex items-center gap-4">
+              <div className="flex items-center gap-3">
 
-                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-teal-100 text-[#0F766E]">
-                  <Mail size={18} />
-                </div>
+                <Mail
+                  size={18}
+                  className="text-[#0F766E]"
+                />
 
-                <p className="break-all text-slate-600">
-                  {email}
+                <p>
+                  <a href={`mailto:${email}`} className="hover:text-[#0F766E] transition">
+                    {email}
+                  </a>
                 </p>
 
               </div>
+
 
 
             </div>
@@ -357,27 +400,24 @@ export default function Footer() {
           </div>
 
 
-
         </div>
 
 
 
 
         {/* Bottom */}
-        <div className="mt-14 flex flex-col items-center justify-between gap-4 border-t border-teal-100 pt-8 text-sm text-slate-500 md:flex-row">
+        <div className="border-t border-slate-200 mt-12 pt-6 flex flex-col md:flex-row justify-between items-center text-sm text-slate-500">
 
 
           <p>
-            © 2026
-            <span className="font-semibold text-[#0F766E]">
-              {" "}Central Biomedicals
-            </span>
-            . All Rights Reserved.
+            © 2026 Raj Biosis.
+            All rights reserved.
           </p>
 
 
-          <p>
-            Designed with ❤️ for Modern Healthcare.
+          <p className="mt-3 md:mt-0">
+            Designed with precision for
+            modern diagnostics.
           </p>
 
 
@@ -385,8 +425,6 @@ export default function Footer() {
 
 
       </div>
-
-
     </footer>
   );
 }

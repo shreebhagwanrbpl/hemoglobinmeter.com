@@ -1,12 +1,9 @@
-// /** @type {import('next').NextConfig} */
-// const nextConfig = {
-//   /* config options here */
-// };
-
-// export default nextConfig;
-
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  serverExternalPackages: ["firebase", "firebase-admin"],
+  experimental: {
+    cpus: 1,
+  },
   images: {
     remotePatterns: [
       {
@@ -15,6 +12,30 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/products",
+        destination: "/items",
+        permanent: true,
+      },
+      {
+        source: "/products/:slug",
+        destination: "/items/:slug",
+        permanent: true,
+      },
+      {
+        source: "/:district/products",
+        destination: "/:district/items",
+        permanent: true,
+      },
+      {
+        source: "/:district/products/:slug",
+        destination: "/:district/items/:slug",
+        permanent: true,
+      },
+    ];
+  },
 };
 
-export default nextConfig;
+module.exports = nextConfig;
