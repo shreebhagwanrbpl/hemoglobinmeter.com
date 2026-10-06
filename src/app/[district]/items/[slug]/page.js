@@ -35,9 +35,9 @@ export async function generateMetadata({ params }) {
     const description =
         product.desc ||
         product.description ||
-        `Buy high-quality ${product.title} ${
+        `Explore ${product.title} ${
             product.brand ? `by ${product.brand}` : ""
-        } model ${product.model || ""} in ${districtName} from ${SITE_NAME}. Trusted laboratory and medical diagnostic equipment supplier.`;
+        } model ${product.model || ""} in ${districtName} from ${SITE_NAME}. Biomedical product catalogue and enquiry resource.`;
 
     const url = `${SITE_URL}/${district}/items/${slug}`;
 

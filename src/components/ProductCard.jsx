@@ -1,5 +1,4 @@
 "use client";
-
 import React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -66,7 +65,7 @@ const ProductCard = React.memo(function ProductCard({
                     <p className="mt-4 text-slate-600 leading-8">
                         {product.description ||
                             product.desc ||
-                            "Premium biomedical equipment designed for laboratories, hospitals and diagnostic centres."}
+                            "Product information is presented with practical details to help buyers assess fit, application and specification."}
                     </p>
 
                     <div className="grid md:grid-cols-2 gap-4 mt-6">

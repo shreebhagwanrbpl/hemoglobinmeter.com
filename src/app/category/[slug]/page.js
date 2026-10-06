@@ -30,8 +30,8 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  const title = `Premium ${categoryName} Supplier & Dealer | ${SITE_NAME}`;
-  const description = `Buy high-quality ${categoryName} diagnostic equipment and laboratory solutions from ${SITE_NAME}. Contact us for specifications and quotations.`;
+  const title = `${categoryName} Products & Catalogue | ${SITE_NAME}`;
+  const description = `Explore the ${categoryName} listings available through ${SITE_NAME} and enquire about specifications, quantities and product requirements.`;
   const url = `${SITE_URL}/category/${slug}`;
 
   return {

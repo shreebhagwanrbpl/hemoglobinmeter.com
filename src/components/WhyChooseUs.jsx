@@ -1,5 +1,4 @@
 "use client";
-
 import { motion } from "framer-motion";
 import {
   ShieldCheck,
@@ -14,27 +13,27 @@ export default function WhyChooseUs() {
   const features = [
     {
       icon: <Microscope size={30} />,
-      title: "Advanced Technology",
+      title: "Broad Product Coverage",
       description:
-        "Modern biomedical and diagnostic equipment for accurate healthcare solutions.",
+        "A catalogue spanning instruments, diagnostic products, laboratory supplies, monitoring devices and associated consumables.",
     },
     {
       icon: <ShieldCheck size={30} />,
-      title: "Trusted Quality",
+      title: "Product Clarity",
       description:
-        "Reliable and certified diagnostic systems with premium quality standards.",
+        "Product information is organised around practical selection details rather than a single device category.",
     },
     {
       icon: <HeartPulse size={30} />,
-      title: "Healthcare Focused",
+      title: "Requirement First",
       description:
-        "Delivering healthcare-driven biomedical solutions with precision and care.",
+        "Product suggestions can begin with the application, workflow, quantity or technical requirement you already have.",
     },
     {
       icon: <BadgeCheck size={30} />,
       title: "Expert Support",
       description:
-        "Professional consultation and technical support for all medical needs.",
+        "Use the enquiry channel to clarify specifications, availability questions and multi-product purchasing needs.",
     },
   ];
 
@@ -52,9 +51,9 @@ export default function WhyChooseUs() {
 
         {/* Section Title */}
         <SectionTitle
-          badge="Why Labs Partner With Our Team"
-          title="Trusted Biomedical Excellence"
-          description="We deliver innovative diagnostic technologies and biomedical solutions with precision, trust, and unmatched service quality."
+          badge="Why Buyers Use the Catalogue"
+          title="A Practical Route from Search to Enquiry"
+          description="The site is built to make biomedical product research easier: locate an item, review its details, identify related options and send a focused enquiry."
           center
         />
 

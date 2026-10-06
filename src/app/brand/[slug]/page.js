@@ -30,7 +30,7 @@ export async function generateMetadata({ params }) {
     };
   }
 
-  const title = `${brandName} Laboratory Equipment Distributor | ${SITE_NAME}`;
+  const title = `${brandName} Biomedical Product Range | ${SITE_NAME}`;
   const description = `Discover premium biomedical and diagnostic equipment from ${brandName} distributed by ${SITE_NAME}. Contact us for price lists and models.`;
   const url = `${SITE_URL}/brand/${slug}`;
 

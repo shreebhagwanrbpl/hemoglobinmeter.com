@@ -10,7 +10,7 @@ export async function generateMetadata({ params }) {
 
   const url = `${SITE_URL}/${district}/contact`;
   const title = `Contact Raj Biosis in ${districtName} | Get a Quote`;
-  const description = `Contact Raj Biosis in ${districtName} for premium diagnostic laboratory analyzers, biochemistry machines, reagents, and get a quick product quotation.`;
+  const description = `Contact Raj Biosis in ${districtName} about biomedical equipment, diagnostic products, reagents, consumables and other product requirements.`;
 
   return {
     title,

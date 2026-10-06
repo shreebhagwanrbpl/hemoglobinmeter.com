@@ -1,6 +1,6 @@
 "use client";
-
 import Image from "next/image";
+import Link from "next/link";
 import PageBanner from "@/components/PageBanner";
 import SectionTitle from "@/components/SectionTitle";
 import {
@@ -14,594 +14,377 @@ import {
   Target,
   Eye,
   ArrowRight,
+  Truck,
+  Building2,
+  CheckCircle2,
 } from "lucide-react";
 
 export default function AboutClient({ city = "" }) {
+  const districtSlug = city ? city.toLowerCase().replace(/\s+/g, "-") : "";
+  const makeLink = (path) => (districtSlug ? `/${districtSlug}${path}` : path);
+
+  const bannerFeatures = [
+    {
+      icon: <ShieldCheck size={15} />,
+      text: "Verified Biomedical Suppliers",
+    },
+    {
+      icon: <Microscope size={15} />,
+      text: "Multi-Category Catalogue",
+    },
+    {
+      icon: <Truck size={15} />,
+      text: "Pan-India Logistics",
+    },
+    {
+      icon: <Headphones size={15} />,
+      text: "Dedicated Sourcing Desk",
+    },
+  ];
+
   return (
     <div className="site5-static">
       {/* =====================================================
-          PAGE BANNER
+          PAGE BANNER (Rich & Upgraded)
       ====================================================== */}
       <PageBanner
+        badge={city ? `Biomedical Supply Desk • ${city}` : "About Raj Biosis & Biomedical Desk"}
         title={
-          city ? `About Our Laboratory Equipment Network in ${city}` : "About Our Laboratory Equipment Network"
+          city
+            ? `About Our Biomedical Catalogue in ${city}`
+            : "About Our Biomedical Product Catalogue"
         }
         subtitle={
           city
-            ? `Delivering trusted diagnostic and biomedical technologies with innovation, quality, and healthcare precision in ${city}.`
-            : "Delivering trusted diagnostic and biomedical technologies with innovation, quality, and healthcare precision."
+            ? `A comprehensive biomedical resource connecting hospitals, clinics, diagnostic centers, and laboratory facilities in ${city} with trusted healthcare equipment and diagnostic supplies.`
+            : "A specialized biomedical product resource connecting healthcare professionals, laboratories, and institutions with verified equipment, diagnostic analyzers, reagents, and consumables."
         }
+        breadcrumbs={[
+          { label: "Home", href: "/" },
+          { label: city ? `About (${city})` : "About Us" },
+        ]}
+        features={bannerFeatures}
       />
 
       {/* =====================================================
-          ABOUT INTRO
+          ABOUT INTRO & STATIC SHOWCASE
       ====================================================== */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-white via-[#F0FDFA] to-[#ECFEFF] py-20 sm:py-24 lg:py-28">
-
+      <section className="relative overflow-hidden bg-gradient-to-b from-white via-[#F0FDFA] to-[#ECFEFF] py-16 sm:py-20 lg:py-24">
         {/* Background Glows */}
         <div className="pointer-events-none absolute -left-32 top-20 h-96 w-96 rounded-full bg-teal-200/30 blur-[130px]" />
-
         <div className="pointer-events-none absolute -right-32 bottom-10 h-96 w-96 rounded-full bg-cyan-200/30 blur-[130px]" />
 
-        <div className="container-custom relative z-10 grid items-center gap-14 lg:grid-cols-[1.05fr_0.95fr] lg:gap-20">
-
-          {/* Image */}
-          <div className="relative">
-
-            <div
-              className="
-                overflow-hidden
-                rounded-[38px]
-                border
-                border-teal-100
-                bg-white
-                p-3
-                shadow-[0_30px_80px_rgba(15,118,110,0.16)]
-                sm:p-4
-              "
-            >
-              <Image
-                src="/about.png"
-                alt="Biomedical laboratory and healthcare equipment"
-                width={1400}
-                height={1000}
-                priority
-                className="
-                  h-[430px]
-                  w-full
-                  rounded-[30px]
-                  object-cover
-                  transition-transform
-                  duration-700
-                  hover:scale-[1.03]
-                  sm:h-[520px]
-                  lg:h-[590px]
-                "
-              />
+        <div className="container-custom relative z-10 grid items-center gap-12 lg:grid-cols-[1fr_1fr] lg:gap-16">
+          {/* Static Image Showcase */}
+          <div className="relative mx-auto w-full max-w-[620px] lg:max-w-none">
+            <div className="overflow-hidden rounded-[32px] border border-teal-100 bg-white p-2.5 shadow-[0_25px_70px_rgba(15,118,110,0.12)] sm:p-3.5">
+              <div className="relative h-[340px] w-full overflow-hidden rounded-[26px] sm:h-[420px] lg:h-[460px]">
+                <Image
+                  src="/about.png"
+                  alt="Biomedical products across multiple categories"
+                  fill
+                  priority
+                  className="object-cover object-center transition-transform duration-700 hover:scale-[1.03]"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+              </div>
             </div>
 
-            {/* Experience Card */}
-            <div
-              className="
-                absolute
-                -bottom-7
-                left-5
-                rounded-3xl
-                border
-                border-teal-100
-                bg-white/95
-                px-6
-                py-5
-                shadow-[0_20px_55px_rgba(15,118,110,0.18)]
-                backdrop-blur-xl
-                sm:left-8
-              "
-            >
-              <div className="flex items-center gap-4">
-                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-700 to-cyan-500 text-white shadow-lg">
-                  <BadgeCheck size={27} />
+            {/* Experience Floating Badge */}
+            <div className="absolute -bottom-5 left-4 rounded-2xl border border-teal-100 bg-white/95 px-5 py-3.5 shadow-[0_15px_40px_rgba(15,118,110,0.15)] backdrop-blur-xl sm:left-6 sm:px-6 sm:py-4">
+              <div className="flex items-center gap-3.5">
+                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-teal-700 to-cyan-500 text-white shadow-md">
+                  <BadgeCheck size={24} />
                 </div>
-
                 <div>
-                  <h3 className="bg-gradient-to-r from-teal-700 to-cyan-500 bg-clip-text text-3xl font-bold text-transparent">
-                    10+
+                  <h3 className="bg-gradient-to-r from-teal-700 to-cyan-500 bg-clip-text text-2xl font-bold text-transparent sm:text-3xl">
+                    10+ Years
                   </h3>
-
-                  <p className="text-sm font-medium text-slate-600">
-                    Years of Excellence
+                  <p className="text-xs font-medium text-slate-600 sm:text-sm">
+                    Biomedical Expertise
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Small Floating Card */}
-            <div
-              className="
-                absolute
-                -right-4
-                top-8
-                hidden
-                items-center
-                gap-3
-                rounded-2xl
-                border
-                border-white/70
-                bg-white/90
-                px-5
-                py-4
-                shadow-[0_15px_45px_rgba(15,118,110,0.15)]
-                backdrop-blur-xl
-                lg:flex
-              "
-            >
-              <div className="rounded-xl bg-teal-50 p-2.5 text-teal-700">
-                <Microscope size={22} />
+            {/* Top-Right Floating Pill */}
+            <div className="absolute -right-3 top-6 hidden items-center gap-3 rounded-2xl border border-white/80 bg-white/95 px-4 py-3 shadow-[0_15px_35px_rgba(15,118,110,0.12)] backdrop-blur-xl sm:flex">
+              <div className="rounded-xl bg-teal-50 p-2 text-teal-700">
+                <Microscope size={20} />
               </div>
-
               <div>
-                <p className="text-sm font-bold text-slate-900">
-                  Biomedical Solutions
+                <p className="text-xs font-bold text-slate-900">
+                  Laboratory Systems
                 </p>
-
-                <p className="text-xs text-slate-500">
-                  Diagnostic & Laboratory
+                <p className="text-[11px] text-slate-500">
+                  Precision Diagnostic Tools
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Content */}
-          <div>
-
+          {/* Text Content */}
+          <div className="mt-4 lg:mt-0">
             <SectionTitle
               badge={city ? `Who We Are in ${city}` : "Who We Are"}
               title={
                 city
-                  ? `A Reliable Partner for Biomedical & Diagnostic Solutions in ${city}`
-                  : "A Reliable Partner for Biomedical & Diagnostic Solutions"
+                  ? `Dedicated Biomedical Sourcing Resource in ${city}`
+                  : "A Structured Catalogue for Biomedical Requirements"
               }
               description={
                 city
-                  ? `We support healthcare professionals, laboratories, hospitals, and diagnostic facilities in ${city} with dependable biomedical equipment and modern laboratory technologies.`
-                  : "We support healthcare professionals, laboratories, hospitals, and diagnostic facilities with dependable biomedical equipment and modern laboratory technologies."
+                  ? `We support healthcare professionals, laboratories, clinics, and hospitals in ${city} with reliable diagnostic instruments, reagents, and biomedical supplies.`
+                  : "Raj Biosis brings together comprehensive product information for buyers seeking standalone instruments, routine consumables, diagnostic analyzers, or bulk institutional equipment."
               }
             />
 
-            <div className="mt-8 space-y-5 text-[16px] leading-8 text-slate-600">
-
+            <div className="mt-6 space-y-4 text-[15px] leading-7 text-slate-600 sm:text-base sm:leading-8">
               <p>
-                At Raj Biosis, we are focused on making advanced biomedical
-                and diagnostic technologies more accessible to healthcare
-                professionals. Our solutions are selected with an emphasis on
-                dependable performance, practical usability, and modern
-                laboratory requirements.
+                Our catalogue is curated for ease of product discovery. We assist clinical and diagnostic institutions in exploring a wide selection of biomedical equipment, diagnostic systems, test kits, reagents, and consumables under one single desk.
               </p>
-
               <p>
-                From diagnostic analyzers and laboratory instruments to
-                specialized healthcare equipment, we help organizations find
-                solutions that fit their operational requirements and support
-                efficient day-to-day laboratory workflows
-                {city ? ` in ${city}` : " across India"}.
+                From single-item procurement to recurring bulk laboratory supplies, our team assists buyers across {city ? city : "India"} with specifications, comparative datasheets, and transparent quotations.
               </p>
-
-              <p>
-                Our approach combines product knowledge, responsive
-                consultation, and customer-focused support to help laboratories
-                and healthcare facilities make informed equipment decisions.
-              </p>
-
             </div>
 
-            {/* Feature Points */}
-            <div className="mt-9 grid gap-4 sm:grid-cols-2">
-
-              <div className="rounded-2xl border border-teal-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-teal-700 to-cyan-500 text-white">
-                  <ShieldCheck size={21} />
+            {/* Feature Points Grid */}
+            <div className="mt-8 grid gap-3.5 sm:grid-cols-2">
+              <div className="rounded-2xl border border-teal-100 bg-white p-4.5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
+                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-teal-700 to-cyan-500 text-white">
+                  <ShieldCheck size={20} />
                 </div>
-
                 <h4 className="font-semibold text-slate-900">
-                  Quality Focused
+                  Category Variety
                 </h4>
-
-                <p className="mt-2 text-sm leading-6 text-slate-500">
-                  Solutions selected with reliability, usability, and
-                  healthcare requirements in mind.
+                <p className="mt-1.5 text-xs leading-5 text-slate-500 sm:text-sm sm:leading-6">
+                  Well-organized biomedical groups allowing quick comparison and selection.
                 </p>
               </div>
 
-              <div className="rounded-2xl border border-teal-100 bg-white p-5 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
-                <div className="mb-4 flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-teal-700 to-cyan-500 text-white">
-                  <Headphones size={21} />
+              <div className="rounded-2xl border border-teal-100 bg-white p-4.5 shadow-sm transition-all duration-300 hover:-translate-y-0.5 hover:shadow-md">
+                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-teal-700 to-cyan-500 text-white">
+                  <Headphones size={20} />
                 </div>
-
                 <h4 className="font-semibold text-slate-900">
-                  Customer Support
+                  Buyer Communication
                 </h4>
-
-                <p className="mt-2 text-sm leading-6 text-slate-500">
-                  Practical guidance and responsive support throughout the
-                  equipment selection process.
+                <p className="mt-1.5 text-xs leading-5 text-slate-500 sm:text-sm sm:leading-6">
+                  Responsive support and technical clarification during equipment selection.
                 </p>
               </div>
-
             </div>
-
           </div>
         </div>
       </section>
 
       {/* =====================================================
-          STATS
+          KEY METRICS / STATS
       ====================================================== */}
-      <section className="bg-slate-950 py-16 sm:py-20">
+      <section className="bg-slate-950 py-14 sm:py-16">
         <div className="container-custom">
-
-          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-
-            <div className="rounded-3xl border border-white/10 bg-white/[0.06] p-7 text-center backdrop-blur-sm">
-              <h3 className="text-4xl font-bold text-cyan-300">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-6 text-center backdrop-blur-sm">
+              <h3 className="text-3xl font-bold text-cyan-300 sm:text-4xl">
                 10+
               </h3>
-
-              <p className="mt-2 text-sm text-slate-300">
-                Years Experience
+              <p className="mt-1.5 text-xs text-slate-300 sm:text-sm">
+                Years of Experience
               </p>
             </div>
 
-            <div className="rounded-3xl border border-white/10 bg-white/[0.06] p-7 text-center backdrop-blur-sm">
-              <h3 className="text-4xl font-bold text-teal-300">
-                500+
+            <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-6 text-center backdrop-blur-sm">
+              <h3 className="text-3xl font-bold text-teal-300 sm:text-4xl">
+                800+
               </h3>
-
-              <p className="mt-2 text-sm text-slate-300">
-                Products Delivered
+              <p className="mt-1.5 text-xs text-slate-300 sm:text-sm">
+                Products & Reagents
               </p>
             </div>
 
-            <div className="rounded-3xl border border-white/10 bg-white/[0.06] p-7 text-center backdrop-blur-sm">
-              <h3 className="text-4xl font-bold text-emerald-300">
+            <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-6 text-center backdrop-blur-sm">
+              <h3 className="text-3xl font-bold text-emerald-300 sm:text-4xl">
                 100%
               </h3>
-
-              <p className="mt-2 text-sm text-slate-300">
-                Quality Focus
+              <p className="mt-1.5 text-xs text-slate-300 sm:text-sm">
+                Quality Assured
               </p>
             </div>
 
-            <div className="rounded-3xl border border-white/10 bg-white/[0.06] p-7 text-center backdrop-blur-sm">
-              <h3 className="text-4xl font-bold text-cyan-300">
-                Pan India
+            <div className="rounded-2xl border border-white/10 bg-white/[0.06] p-6 text-center backdrop-blur-sm">
+              <h3 className="text-3xl font-bold text-cyan-300 sm:text-4xl">
+                Pan-India
               </h3>
-
-              <p className="mt-2 text-sm text-slate-300">
-                Service Reach
+              <p className="mt-1.5 text-xs text-slate-300 sm:text-sm">
+                Distribution Network
               </p>
             </div>
-
           </div>
-
         </div>
       </section>
 
       {/* =====================================================
-          WHAT WE PROVIDE
+          WHAT WE PROVIDE / PRODUCT PORTFOLIO
       ====================================================== */}
-      <section className="bg-white py-20 sm:py-24 lg:py-28">
+      <section className="bg-white py-16 sm:py-20 lg:py-24">
         <div className="container-custom">
-
           <SectionTitle
             badge="Our Expertise"
             title={
               city
-                ? `Biomedical Solutions Designed for Modern Healthcare in ${city}`
-                : "Biomedical Solutions Designed for Modern Healthcare"
+                ? `Biomedical Product Portfolio in ${city}`
+                : "Comprehensive Biomedical Portfolio"
             }
-            description="Our product portfolio covers a wide range of laboratory and diagnostic requirements, helping healthcare facilities build efficient and dependable workflows."
+            description="Our catalogue spans across high-precision laboratory instruments, automated diagnostic analyzers, point-of-care test kits, consumables, and hospital supplies."
           />
 
-          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-
-            {/* Card 1 */}
-            <div className="group rounded-3xl border border-teal-100 bg-gradient-to-br from-white to-teal-50 p-7 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
-
-              <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-700 to-cyan-500 text-white shadow-lg">
-                <Microscope size={26} />
+          <div className="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div className="group rounded-2xl border border-teal-100 bg-gradient-to-br from-white to-teal-50/60 p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-teal-700 to-cyan-500 text-white shadow-md">
+                <Microscope size={22} />
               </div>
-
-              <h3 className="text-xl font-bold text-slate-900">
+              <h3 className="text-lg font-bold text-slate-900">
                 Laboratory Equipment
               </h3>
-
-              <p className="mt-3 leading-7 text-slate-600">
-                Modern laboratory instruments designed to support accurate,
-                efficient, and dependable laboratory operations.
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                Centrifuges, spectrophotometers, incubators, and testing devices built for operational dependability.
               </p>
-
             </div>
 
-            {/* Card 2 */}
-            <div className="group rounded-3xl border border-cyan-100 bg-gradient-to-br from-white to-cyan-50 p-7 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
-
-              <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-600 to-blue-500 text-white shadow-lg">
-                <FlaskConical size={26} />
+            <div className="group rounded-2xl border border-cyan-100 bg-gradient-to-br from-white to-cyan-50/60 p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-600 to-blue-500 text-white shadow-md">
+                <FlaskConical size={22} />
               </div>
-
-              <h3 className="text-xl font-bold text-slate-900">
+              <h3 className="text-lg font-bold text-slate-900">
                 Diagnostic Systems
               </h3>
-
-              <p className="mt-3 leading-7 text-slate-600">
-                Diagnostic technologies and analyzers supporting modern
-                healthcare laboratories and testing environments.
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                Clinical chemistry analyzers, hematology instruments, and diagnostic test platforms.
               </p>
-
             </div>
 
-            {/* Card 3 */}
-            <div className="group rounded-3xl border border-emerald-100 bg-gradient-to-br from-white to-emerald-50 p-7 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
-
-              <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-500 text-white shadow-lg">
-                <Stethoscope size={26} />
+            <div className="group rounded-2xl border border-emerald-100 bg-gradient-to-br from-white to-emerald-50/60 p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-600 to-teal-500 text-white shadow-md">
+                <Stethoscope size={22} />
               </div>
-
-              <h3 className="text-xl font-bold text-slate-900">
-                Healthcare Equipment
+              <h3 className="text-lg font-bold text-slate-900">
+                Healthcare Supplies
               </h3>
-
-              <p className="mt-3 leading-7 text-slate-600">
-                Practical healthcare equipment solutions for hospitals,
-                clinics, laboratories, and diagnostic facilities.
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                Essential diagnostic test strips, reagents, consumables, and hospital monitoring gear.
               </p>
-
             </div>
 
-            {/* Card 4 */}
-            <div className="group rounded-3xl border border-teal-100 bg-gradient-to-br from-white to-teal-50 p-7 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
-
-              <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-700 to-cyan-500 text-white shadow-lg">
-                <Settings2 size={26} />
+            <div className="group rounded-2xl border border-teal-100 bg-gradient-to-br from-white to-teal-50/60 p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-teal-700 to-cyan-500 text-white shadow-md">
+                <Settings2 size={22} />
               </div>
-
-              <h3 className="text-xl font-bold text-slate-900">
+              <h3 className="text-lg font-bold text-slate-900">
                 Laboratory Automation
               </h3>
-
-              <p className="mt-3 leading-7 text-slate-600">
-                Technology-driven solutions that help laboratories improve
-                workflow efficiency and operational consistency.
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                Automated equipment to boost sample processing speed and diagnostic accuracy.
               </p>
-
             </div>
 
-            {/* Card 5 */}
-            <div className="group rounded-3xl border border-cyan-100 bg-gradient-to-br from-white to-cyan-50 p-7 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
-
-              <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-600 to-blue-500 text-white shadow-lg">
-                <Target size={26} />
+            <div className="group rounded-2xl border border-cyan-100 bg-gradient-to-br from-white to-cyan-50/60 p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-600 to-blue-500 text-white shadow-md">
+                <Target size={22} />
               </div>
-
-              <h3 className="text-xl font-bold text-slate-900">
-                Precision & Efficiency
+              <h3 className="text-lg font-bold text-slate-900">
+                Precision & Quality
               </h3>
-
-              <p className="mt-3 leading-7 text-slate-600">
-                Solutions focused on dependable results, practical operation,
-                and efficient laboratory performance.
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                Strict quality control ensuring reproducible results for clinical diagnostic workflows.
               </p>
-
             </div>
 
-            {/* Card 6 */}
-            <div className="group rounded-3xl border border-emerald-100 bg-gradient-to-br from-white to-emerald-50 p-7 shadow-sm transition-all duration-300 hover:-translate-y-2 hover:shadow-xl">
-
-              <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-emerald-600 to-teal-500 text-white shadow-lg">
-                <Headphones size={26} />
+            <div className="group rounded-2xl border border-emerald-100 bg-gradient-to-br from-white to-emerald-50/60 p-6 shadow-sm transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg">
+              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-emerald-600 to-teal-500 text-white shadow-md">
+                <Headphones size={22} />
               </div>
-
-              <h3 className="text-xl font-bold text-slate-900">
-                Consultation & Support
+              <h3 className="text-lg font-bold text-slate-900">
+                Technical Consultation
               </h3>
-
-              <p className="mt-3 leading-7 text-slate-600">
-                Product guidance and responsive support to help customers
-                choose solutions suited to their specific requirements.
+              <p className="mt-2 text-sm leading-6 text-slate-600">
+                Expert support for quotation requests, instrument compatibility, and setup guidance.
               </p>
-
             </div>
-
           </div>
         </div>
       </section>
 
       {/* =====================================================
-          MISSION / VISION
+          MISSION & VISION
       ====================================================== */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#ECFEFF] to-white py-20 sm:py-24">
-
+      <section className="relative overflow-hidden bg-gradient-to-b from-[#ECFEFF] to-white py-16 sm:py-20">
         <div className="container-custom">
-
-          <div className="grid gap-7 lg:grid-cols-2">
-
+          <div className="grid gap-6 lg:grid-cols-2">
             {/* Mission */}
-            <div className="rounded-[32px] border border-teal-100 bg-white p-8 shadow-[0_20px_60px_rgba(15,118,110,0.08)] sm:p-10">
-
-              <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-teal-700 to-cyan-500 text-white">
-                <Target size={27} />
+            <div className="rounded-[28px] border border-teal-100 bg-white p-7 shadow-[0_15px_45px_rgba(15,118,110,0.06)] sm:p-9">
+              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-teal-700 to-cyan-500 text-white">
+                <Target size={24} />
               </div>
-
-              <h3 className="text-2xl font-bold text-slate-900">
-                Our Mission
-              </h3>
-
-              <p className="mt-4 leading-8 text-slate-600">
-                Our mission is to provide healthcare organizations with
-                dependable biomedical and diagnostic technologies that help
-                improve laboratory efficiency, support accurate diagnostics,
-                and contribute to better healthcare operations.
+              <h3 className="text-2xl font-bold text-slate-900">Our Mission</h3>
+              <p className="mt-3.5 text-sm leading-7 text-slate-600 sm:text-base sm:leading-8">
+                To equip healthcare providers, diagnostic laboratories, and medical facilities with premium biomedical equipment and dependable consumables that enhance diagnostic speed, precision, and healthcare outcomes.
               </p>
-
-              <p className="mt-4 leading-8 text-slate-600">
-                We aim to build long-term customer relationships through
-                product knowledge, transparent communication, and
-                service-oriented support.
+              <p className="mt-3 text-sm leading-7 text-slate-600 sm:text-base sm:leading-8">
+                We strive to establish long-term partnerships through clear product information, genuine supply chains, and transparent customer service.
               </p>
-
             </div>
 
             {/* Vision */}
-            <div className="rounded-[32px] border border-cyan-100 bg-white p-8 shadow-[0_20px_60px_rgba(8,145,178,0.08)] sm:p-10">
-
-              <div className="mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-600 to-blue-500 text-white">
-                <Eye size={27} />
+            <div className="rounded-[28px] border border-cyan-100 bg-white p-7 shadow-[0_15px_45px_rgba(8,145,178,0.06)] sm:p-9">
+              <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-cyan-600 to-blue-500 text-white">
+                <Eye size={24} />
               </div>
-
-              <h3 className="text-2xl font-bold text-slate-900">
-                Our Vision
-              </h3>
-
-              <p className="mt-4 leading-8 text-slate-600">
-                Our vision is to become a dependable name in biomedical and
-                laboratory solutions by connecting healthcare facilities with
-                modern technologies and practical equipment solutions.
+              <h3 className="text-2xl font-bold text-slate-900">Our Vision</h3>
+              <p className="mt-3.5 text-sm leading-7 text-slate-600 sm:text-base sm:leading-8">
+                To be India&apos;s most trusted biomedical sourcing and distribution desk, bridging the gap between cutting-edge medical technologies and healthcare institutions nationwide.
               </p>
-
-              <p className="mt-4 leading-8 text-slate-600">
-                We continuously focus on evolving healthcare requirements,
-                emerging laboratory technologies, and solutions that create
-                meaningful value for our customers.
-              </p>
-
-            </div>
-
-          </div>
-
-        </div>
-      </section>
-
-      {/* =====================================================
-          WHY CHOOSE US
-      ====================================================== */}
-      <section className="bg-white py-20 sm:py-24">
-        <div className="container-custom">
-
-          <SectionTitle
-            badge="Why Labs Partner With Our Team"
-            title="Built Around Quality, Trust & Healthcare Needs"
-            description="We focus on making the process of finding and adopting biomedical equipment simple, practical, and reliable."
-          />
-
-          <div className="mt-14 grid gap-5 md:grid-cols-2 lg:grid-cols-4">
-
-            <div className="rounded-3xl border border-slate-100 bg-slate-50 p-6">
-              <ShieldCheck className="mb-5 text-teal-600" size={30} />
-
-              <h4 className="font-bold text-slate-900">
-                Reliable Solutions
-              </h4>
-
-              <p className="mt-2 text-sm leading-6 text-slate-500">
-                Equipment solutions selected around practical healthcare
-                requirements.
+              <p className="mt-3 text-sm leading-7 text-slate-600 sm:text-base sm:leading-8">
+                We are dedicated to expanding biomedical access, improving diagnostic turnaround, and providing consistent supply assurance across India.
               </p>
             </div>
-
-            <div className="rounded-3xl border border-slate-100 bg-slate-50 p-6">
-              <Microscope className="mb-5 text-cyan-600" size={30} />
-
-              <h4 className="font-bold text-slate-900">
-                Product Knowledge
-              </h4>
-
-              <p className="mt-2 text-sm leading-6 text-slate-500">
-                Detailed understanding of laboratory and diagnostic equipment.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-slate-100 bg-slate-50 p-6">
-              <BadgeCheck className="mb-5 text-emerald-600" size={30} />
-
-              <h4 className="font-bold text-slate-900">
-                Quality Focus
-              </h4>
-
-              <p className="mt-2 text-sm leading-6 text-slate-500">
-                Focus on dependable products and efficient healthcare
-                workflows.
-              </p>
-            </div>
-
-            <div className="rounded-3xl border border-slate-100 bg-slate-50 p-6">
-              <Headphones className="mb-5 text-teal-600" size={30} />
-
-              <h4 className="font-bold text-slate-900">
-                Customer Support
-              </h4>
-
-              <p className="mt-2 text-sm leading-6 text-slate-500">
-                Responsive guidance from product selection through
-                implementation.
-              </p>
-            </div>
-
           </div>
         </div>
       </section>
 
       {/* =====================================================
-          CTA
+          CTA SECTION
       ====================================================== */}
-      <section className="bg-gradient-to-r from-teal-800 via-cyan-700 to-teal-800 py-16 sm:py-20">
+      <section className="bg-gradient-to-r from-teal-800 via-cyan-700 to-teal-800 py-14 sm:py-16">
         <div className="container-custom">
-
-          <div className="flex flex-col items-start justify-between gap-8 lg:flex-row lg:items-center">
-
+          <div className="flex flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
             <div className="max-w-3xl">
-
-              <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-cyan-200">
-                Healthcare Technology
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-cyan-200">
+                Healthcare Technology & Procurement
               </p>
-
-              <h2 className="text-3xl font-bold leading-tight text-white sm:text-4xl">
-                Looking for the Right Biomedical Equipment?
+              <h2 className="text-2xl font-bold leading-tight text-white sm:text-3xl md:text-4xl">
+                Ready to Source Biomedical Instruments or Supplies?
               </h2>
-
-              <p className="mt-4 max-w-2xl leading-7 text-teal-50">
-                Explore our diagnostic and laboratory equipment portfolio or
-                connect with us to discuss your specific healthcare
-                requirements
-                {city ? ` in ${city}` : ""}.
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-teal-50 sm:text-base sm:leading-7">
+                Explore our full product catalogue or connect directly with our sourcing team for rapid quotes and technical assistance{city ? ` in ${city}` : ""}.
               </p>
-
             </div>
 
-            <a
-              href={city ? `/${city.toLowerCase().replace(/\s+/g, "-")}/contact` : "/contact"}
-              className="
-                inline-flex
-                shrink-0
-                items-center
-                gap-2
-                rounded-xl
-                bg-white
-                px-7
-                py-3.5
-                font-semibold
-                text-teal-800
-                shadow-xl
-                transition-all
-                duration-300
-                hover:-translate-y-1
-                hover:bg-cyan-50
-              "
-            >
-              Contact Us
-              <ArrowRight size={18} />
-            </a>
-
+            <div className="flex flex-wrap gap-3">
+              <Link
+                href={makeLink("/items")}
+                className="inline-flex items-center gap-2 rounded-xl bg-white px-6 py-3 text-sm font-semibold text-teal-800 shadow-xl transition-all duration-300 hover:-translate-y-1 hover:bg-cyan-50"
+              >
+                Browse Catalogue
+                <ArrowRight size={16} />
+              </Link>
+              <Link
+                href={makeLink("/contact")}
+                className="inline-flex items-center gap-2 rounded-xl border border-white/40 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-md transition-all duration-300 hover:border-white/70 hover:bg-white/20"
+              >
+                Contact Us
+              </Link>
+            </div>
           </div>
-
         </div>
       </section>
     </div>

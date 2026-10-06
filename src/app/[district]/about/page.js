@@ -9,8 +9,8 @@ export async function generateMetadata({ params }) {
     .replace(/\b\w/g, (char) => char.toUpperCase());
 
   const url = `${SITE_URL}/${district}/about`;
-  const title = `About Our Laboratory Equipment Network in ${districtName} | Biomedical Supplier`;
-  const description = `Learn more about Raj Biosis in ${districtName}, a trusted partner and distributor of diagnostic analyzers, medical laboratory machines, and biomedical healthcare systems.`;
+  const title = `Biomedical Product Catalogue in ${districtName} | About Raj Biosis`;
+  const description = `Explore how Raj Biosis supports biomedical product enquiries in ${districtName} across instruments, diagnostic products, laboratory supplies and related healthcare items.`;
 
   return {
     title,

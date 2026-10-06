@@ -1,31 +1,19 @@
 "use client";
-
-import { useEffect, useState, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
 import Image from "next/image";
 import toast from "react-hot-toast";
-import Link from "next/link";
-
-import { usePathname } from "next/navigation";
-
+import { Download } from "lucide-react";
 import {
     FaPlay,
     FaShareAlt,
+    FaLink,
     FaWhatsapp,
     FaFacebook,
-    FaInstagram,
-    FaLink,
+    FaInstagram
 } from "react-icons/fa";
-
-import {
-    doc,
-    getDoc,
-    getDocs,
-    addDoc,
-    collection,
-} from "firebase/firestore";
-import { db } from "@/lib/firebase";
-import { fetchFullCatalog } from "@/lib/data-fetcher";
-import { Download } from "lucide-react";
+import { fetchFullCatalog, fetchContactData, submitProductQuery } from "@/lib/data-fetcher";
 const makeSlug = (text = "") =>
     text
         .toLowerCase()
@@ -52,9 +40,9 @@ export default function ProductDetails({ slug }) {
     const [downloading, setDownloading] = useState(false);
     const [brochureImage, setBrochureImage] = useState("");
     const [contactData, setContactData] = useState({
-        phone: "+91 9983123469\n+91 9983333489",
-        email: "rajbiosis@yahoo.in",
-        address: "F-4, 1st Floor, Plot No. 16, D-Block Tagor Nagar, on Ajmer-Delhi, 200 Feet Bypass Rd, Jaipur, Rajasthan 302021"
+        phone: "",
+        email: "",
+        address: ""
     });
 
     const pathname = usePathname();
@@ -73,9 +61,12 @@ export default function ProductDetails({ slug }) {
         city.slice(1);
 
     useEffect(() => {
+        let isMounted = true;
+
         const loadProduct = async () => {
             try {
                 const allProducts = await fetchFullCatalog();
+                if (!isMounted) return;
                 const found = allProducts.find(
                     (p) => p.slug === slug
                 );
@@ -96,27 +87,28 @@ export default function ProductDetails({ slug }) {
 
         const loadContact = async () => {
             try {
-                const snap = await getDoc(
-                    doc(db, "websites", "hemoglobinmetercom", "pages", "contact")
-                );
-                if (snap.exists()) {
-                    const info = snap.data().contactInfo || [];
-                    const getContactField = (labels, defaultValue) => {
-                        const normalized = labels.map((l) => l.toLowerCase().trim());
-                        const found = info.find(
-                            (x) => x && x.label && normalized.includes(x.label.toLowerCase().trim())
-                        );
-                        return found ? found.value : defaultValue;
-                    };
-                    const phoneVal = getContactField(["phone", "phone number", "contact number"], "+91 9983123469\n+91 9983333489");
-                    const emailVal = getContactField(["email", "email address", "email for reply"], "rajbiosis@yahoo.in");
-                    const addressVal = getContactField(["address", "office address"], "F-4, 1st Floor, Plot No. 16, D-Block Tagor Nagar, on Ajmer-Delhi, 200 Feet Bypass Rd, Jaipur, Rajasthan 302021");
-                    setContactData({
-                        phone: phoneVal,
-                        email: emailVal,
-                        address: addressVal
-                    });
-                }
+                const data = await fetchContactData();
+                if (!isMounted || !data) return;
+                const info = data.contactInfo || [];
+                const getContactField = (labels, defaultValue = "") => {
+                    const normalized = labels.map((l) => l.toLowerCase().trim());
+                    const found = info.find(
+                        (x) => x && x.label && normalized.includes(x.label.toLowerCase().trim())
+                    );
+                    if (!found || !found.value) return defaultValue;
+                    if (Array.isArray(found.value)) {
+                        return found.value.join("\n");
+                    }
+                    return found.value;
+                };
+                const phoneVal = getContactField(["phone", "phone number", "contact number", "mobile", "mobile no"]);
+                const emailVal = getContactField(["email", "email address", "email for reply", "mail"]);
+                const addressVal = getContactField(["address", "office address", "location"]);
+                setContactData({
+                    phone: phoneVal,
+                    email: emailVal,
+                    address: addressVal
+                });
             } catch (err) {
                 console.error("Error loading contact details:", err);
             }
@@ -124,6 +116,10 @@ export default function ProductDetails({ slug }) {
 
         loadProduct();
         loadContact();
+
+        return () => {
+            isMounted = false;
+        };
     }, [slug]);
 
     const handleDownloadBrochure = async () => {
@@ -235,22 +231,14 @@ export default function ProductDetails({ slug }) {
         try {
             setSubmitting(true);
 
-            await addDoc(
-                collection(
-                    db,
-                    "websitesQueries",
-                    "hemoglobinmetercom",
-                    "productQueries"
-                ),
-                {
-                    ...form,
-                    productName: product.title,
-                    productSlug: product.slug,
-                    brand: product.brand || "",
-                    model: product.model || "",
-                    createdAt: new Date(),
-                }
-            );
+            await submitProductQuery({
+                ...form,
+                productName: product.title,
+                productSlug: product.slug,
+                brand: product.brand || "",
+                model: product.model || "",
+                createdAt: new Date().toISOString(),
+            });
 
             toast.success(
                 "Your enquiry has been submitted successfully."
@@ -282,7 +270,7 @@ export default function ProductDetails({ slug }) {
                 product.title,
             sku: product.model || product.slug,
             mpn: product.model || product.slug,
-                        brand: {
+            brand: {
                 "@type": "Brand",
                 name: product.brand || "Raj Biosis",
             },
@@ -306,7 +294,7 @@ export default function ProductDetails({ slug }) {
                     name: `What is ${product.title} used for in ${cityName}?`,
                     acceptedAnswer: {
                         "@type": "Answer",
-                        text: `${product.title} is commonly used in hospitals, pathology laboratories and diagnostic centres.`,
+                        text: `${product.title} may be considered for the applications stated in its product information and specifications.`,
                     },
                 },
                 {
@@ -322,7 +310,7 @@ export default function ProductDetails({ slug }) {
                     name: `Are you an authorized supplier of ${product.title}?`,
                     acceptedAnswer: {
                         "@type": "Answer",
-                        text: "We supply genuine biomedical and laboratory equipment from trusted brands.",
+                        text: "Brand, model and specification information is shown where available for the listed item.",
                     },
                 },
                 {
@@ -330,7 +318,7 @@ export default function ProductDetails({ slug }) {
                     name: `Can hospitals in ${cityName} order this product?`,
                     acceptedAnswer: {
                         "@type": "Answer",
-                        text: "Yes, hospitals, pathology laboratories, diagnostic centres and healthcare facilities can order this product.",
+                        text: "The item can be included in a biomedical product enquiry; fulfilment depends on product and supply details.",
                     },
                 },
             ],
@@ -1192,82 +1180,18 @@ ${product?.desc}
 
 
 
-                            {/* Specifications Table */}
-                            <div className="mt-10 overflow-x-auto">
-
-                                <table className="w-full border border-slate-200">
-
-
-                                    <tbody>
-
-
-                                        {[
-                                            ["Brand", product.brand],
-                                            ["Model", product.model],
-                                            ["Usage", product.usage],
-                                            ["Automation", product.automation],
-                                            ["Capacity", product.capacity],
-                                            ["Throughput", product.throughput],
-                                        ].map(([label, value], index) => (
-
-                                            <tr key={index}>
-
-
-                                                <td className="
-              border 
-              border-slate-200
-              p-3
-              font-semibold
-              text-slate-900
-              bg-slate-50
-            ">
-                                                    {label}
-                                                </td>
-
-
-                                                <td className="
-              border 
-              border-slate-200
-              p-3
-              text-slate-600
-            ">
-                                                    {value || "N/A"}
-                                                </td>
-
-
-                                            </tr>
-
-                                        ))}
-
-
-                                    </tbody>
-
-
-                                </table>
-
-
-                            </div>
-
-
-
-
-
                             {/* SEO Content */}
                             <div className="mt-12">
 
 
                                 <h3 className="text-2xl font-bold mb-4 text-[#0F172A]">
-                                    Why Choose Raj Biosis in {cityName}?
+                                    Product Context in {cityName}
                                 </h3>
 
 
                                 <p className="text-[#475569] leading-8">
 
-                                    Raj Biosis is a trusted supplier and
-                                    distributor of {product.title} in {cityName}.
-                                    We provide high-quality biomedical and laboratory
-                                    equipment for hospitals, pathology laboratories,
-                                    diagnostic centres and healthcare facilities.
+                                    This listing gives buyers a starting point for reviewing {product.title} in {cityName}. Product suitability should be considered against the intended application, required specifications and operating environment.
 
                                 </p>
 
@@ -1278,16 +1202,13 @@ ${product?.desc}
 
 
                                     <h3 className="text-2xl font-bold mb-4 text-[#0F172A]">
-                                        Features of {product.title}
+                                        Key Details for {product.title}
                                     </h3>
 
 
                                     <p className="text-[#475569] leading-8">
 
-                                        {product.title} offers reliable performance,
-                                        accurate results, easy operation, long service
-                                        life and efficient workflow for laboratories
-                                        and hospitals.
+                                        The useful selection points for {product.title} depend on its configuration, parameters, capacity, compatibility and intended use. Refer to the listed specifications when comparing options.
 
                                     </p>
 
@@ -1301,7 +1222,7 @@ ${product?.desc}
 
 
                                     <h3 className="text-2xl font-bold mb-4 text-[#0F172A]">
-                                        Applications of {product.title}
+                                        Potential Use Areas for {product.title}
                                     </h3>
 
                                     <p className="text-[#475569] leading-8">
@@ -1320,15 +1241,12 @@ ${product?.desc}
 
 
                                     <h3 className="text-2xl font-bold mb-4 text-[#0F172A]">
-                                        {product.title} Supplier in {cityName}
+                                        Enquire About {product.title} in {cityName}
                                     </h3>
 
 
                                     <p className="text-[#475569] leading-8">
-                                        Raj Biosis supplies {product.title}
-                                        in {cityName} with technical support,
-                                        installation assistance and customer service
-                                        for hospitals and laboratories.
+                                        For availability, configuration, quantity or related product questions about {product.title} in {cityName}, use the enquiry option and include the details relevant to your requirement.
                                     </p>
 
 
@@ -1341,38 +1259,12 @@ ${product?.desc}
 
 
                                     <h3 className="text-2xl font-bold mb-4 text-[#0F172A]">
-                                        {product.title} Dealer in {cityName}
+                                        {product.title} Product Enquiry in {cityName}
                                     </h3>
 
 
                                     <p className="text-[#475569] leading-8">
-                                        Raj Biosis is a trusted dealer of
-                                        {product.title} in {cityName}. We supply
-                                        biomedical equipment, laboratory instruments,
-                                        diagnostic analyzers and healthcare devices
-                                        to hospitals, pathology labs and research centres.
-                                    </p>
-
-
-                                </div>
-
-
-
-
-
-                                <div className="mt-8">
-
-
-                                    <h3 className="text-2xl font-bold mb-4 text-[#0F172A]">
-                                        {product.title} Distributor in {cityName}
-                                    </h3>
-
-
-                                    <p className="text-[#475569] leading-8">
-                                        Looking for a reliable distributor of
-                                        {product.title} in {cityName}? We provide
-                                        installation support, product guidance,
-                                        maintenance assistance and fast delivery.
+                                        The catalogue covers more than one biomedical product family. An enquiry for {product.title} can be combined with other instruments, kits, reagents or supplies when required.
                                     </p>
 
 
@@ -1386,15 +1278,12 @@ ${product?.desc}
 
 
                                     <h3 className="text-2xl font-bold mb-4 text-[#0F172A]">
-                                        Buy {product.title} in {cityName}
+                                        Request Information for {product.title} in {cityName}
                                     </h3>
 
 
                                     <p className="text-[#475569] leading-8">
-                                        Buy high quality {product.title} in
-                                        {cityName} at competitive prices.
-                                        Contact Raj Biosis for the
-                                        latest quotation and product availability.
+                                        Share the model, quantity, specification or application details you have for {product.title} in {cityName}; these details make the product enquiry more precise.
                                     </p>
 
 
@@ -1408,15 +1297,31 @@ ${product?.desc}
 
 
                                     <h3 className="text-2xl font-bold mb-4 text-[#0F172A]">
-                                        {product.title} Price in {cityName}
+                                        Request a Quote for {product.title} in {cityName}
                                     </h3>
 
 
                                     <p className="text-[#475569] leading-8">
-                                        The price of {product.title} depends on
-                                        brand, model, specifications and features.
-                                        Contact our team for the latest pricing,
-                                        availability and delivery details.
+                                        Quotation and availability can vary with model, configuration, quantity and other product details. Send the requirement to receive the applicable information.
+                                    </p>
+
+
+                                </div>
+
+
+
+
+
+                                <div className="mt-8">
+
+
+                                    <h3 className="text-2xl font-bold mb-4 text-[#0F172A]">
+                                        Pricing Information for {product.title} in {cityName}
+                                    </h3>
+
+
+                                    <p className="text-[#475569] leading-8">
+                                        Pricing can depend on the exact model, configuration, quantity and supply conditions. Include these details when requesting current pricing information.
                                     </p>
 
 
@@ -1429,7 +1334,7 @@ ${product?.desc}
 
 
                                 <h3 className="text-2xl font-bold mb-6 text-slate-900">
-                                    Frequently Asked Questions
+                                    Product Questions
                                 </h3>
 
 
@@ -1459,8 +1364,7 @@ ${product?.desc}
                                         </h4>
 
                                         <p className="text-slate-600 mt-2">
-                                            Pricing depends on specifications,
-                                            brand and model. Contact us for a quote.
+                                            Pricing varies with the selected configuration, quantity and supply details; request a quotation for the item you need.
                                         </p>
                                     </div>
 
@@ -1474,8 +1378,7 @@ ${product?.desc}
                                         </h4>
 
                                         <p className="text-slate-600 mt-2">
-                                            We supply genuine biomedical and
-                                            laboratory equipment from trusted brands.
+                                            Brand, model and specification information can be reviewed on the listing before an enquiry is submitted.
                                         </p>
                                     </div>
 
@@ -1489,9 +1392,7 @@ ${product?.desc}
                                         </h4>
 
                                         <p className="text-slate-600 mt-2">
-                                            Yes, hospitals, pathology laboratories,
-                                            diagnostic centres and healthcare facilities
-                                            can order this product.
+                                            The catalogue is intended for organisations sourcing biomedical products; ordering details depend on the product and requirement.
                                         </p>
                                     </div>
 
@@ -1505,8 +1406,7 @@ ${product?.desc}
                                         </h4>
 
                                         <p className="text-slate-600 mt-2">
-                                            Yes, installation and technical support
-                                            are available depending on the product.
+                                            Any installation or technical assistance depends on the particular product, location and arrangement agreed for the enquiry.
                                         </p>
                                     </div>
 
@@ -1617,19 +1517,21 @@ ${product?.desc}
                                 Raj Biosis
                             </h1>
                             <p style={{ margin: "2px 0 0 0", fontSize: "12px", color: "#475569", fontWeight: "600", textTransform: "uppercase", letterSpacing: "1px" }}>
-                                Trusted Biomedical Systems
+                                Biomedical Product Information
                             </p>
                         </div>
                     </div>
                     {/* Contact Details */}
                     <div style={{ textAlign: "right", fontSize: "12px", lineHeight: "1.6", color: "#475569" }}>
                         <p style={{ margin: "0", fontWeight: "700", color: "#0F766E", fontSize: "14px" }}>www.hemoglobinmeter.com</p>
-                        <p style={{ margin: "0" }}>Email: {contactData.email}</p>
-                        <div style={{ margin: "0" }}>
-                            {String(contactData.phone || "").split(/[\n,]+/).map((num, i) => (
-                                <span key={i} style={{ display: "block" }}>Mob: {num.trim()}</span>
-                            ))}
-                        </div>
+                        {contactData.email && <p style={{ margin: "0" }}>Email: {contactData.email}</p>}
+                        {contactData.phone && (
+                            <div style={{ margin: "0" }}>
+                                {String(contactData.phone).split(/[\n,]+/).map((num, i) => (
+                                    <span key={i} style={{ display: "block" }}>Mob: {num.trim()}</span>
+                                ))}
+                            </div>
+                        )}
                     </div>
                 </div>
 
@@ -1722,7 +1624,7 @@ ${product?.desc}
                         Product Overview
                     </h3>
                     <p style={{ fontSize: "14px", lineHeight: "1.6", color: "#475569", margin: "0", textAlign: "justify" }}>
-                        {product.description || product.desc || "Premium biomedical equipment designed for laboratories, hospitals, and diagnostic centers."}
+                        {product.description || product.desc || "Biomedical product listing with specifications and application information."}
                     </p>
                 </div>
 
@@ -1736,8 +1638,8 @@ ${product?.desc}
                     color: "#94A3B8",
                     lineHeight: "1.5"
                 }}>
-                    <p style={{ margin: "0", fontWeight: "600" }}>Office Address: {contactData.address}</p>
-                    <p style={{ margin: "5px 0 0 0" }}>© 2026 Raj Biosis. All rights reserved. Premium diagnostics and biomedical solutions.</p>
+                    {contactData.address && <p style={{ margin: "0", fontWeight: "600" }}>Office Address: {contactData.address}</p>}
+                    <p style={{ margin: "5px 0 0 0" }}>© 2026 Raj Biosis. All rights reserved. Biomedical product catalogue and enquiry services.</p>
                 </div>
             </div>
 

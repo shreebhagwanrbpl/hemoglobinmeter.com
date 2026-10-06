@@ -14,7 +14,7 @@ export async function generateMetadata({ params }) {
 
   const url = `${SITE_URL}/${district}/items`;
   const title = `Biomedical & Diagnostic Equipment in ${districtName} | Raj Biosis`;
-  const description = `Browse our catalog of premium diagnostic technologies, cbc counters, biochemistry analyzers, and laboratory equipment in ${districtName} from Raj Biosis.`;
+  const description = `Explore biomedical product categories and listings for buyers in ${districtName}, covering equipment, diagnostic items, laboratory supplies and related products.`;
 
   return {
     title,

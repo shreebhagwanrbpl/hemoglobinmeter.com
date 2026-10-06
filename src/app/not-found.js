@@ -17,7 +17,7 @@ export default function NotFound() {
             Oops! Page Not Found
           </h2>
           <p className="text-slate-600 mb-8 leading-7">
-            We couldn't find the page you were looking for. You can browse our wide range of diagnostic analyzers and medical laboratory equipment.
+            This page is not available. Continue to the product catalogue to explore biomedical equipment, diagnostic items, supplies and related products.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link href="/" className="primary-btn flex justify-center items-center">

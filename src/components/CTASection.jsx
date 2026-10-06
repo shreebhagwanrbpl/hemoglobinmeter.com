@@ -1,5 +1,4 @@
 "use client";
-
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -71,21 +70,19 @@ export default function CTASection({ city }) {
 
               <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-5 py-2 text-sm font-semibold text-white backdrop-blur-xl">
                 <PhoneCall size={16} />
-                Get In Touch
+                Start a Product Enquiry
               </span>
 
               <h2 className="mt-6 text-4xl font-bold leading-tight text-white lg:text-6xl">
-                Need Premium
+                Looking for Several
                 <br />
                 <span className="bg-gradient-to-r from-cyan-100 via-white to-teal-100 bg-clip-text text-transparent">
-                  Biomedical Solutions?
+                  Biomedical Items?
                 </span>
               </h2>
 
               <p className="mt-6 max-w-xl text-lg leading-8 text-teal-50">
-                Discover innovative diagnostic systems, laboratory equipment,
-                installation, AMC services, and trusted biomedical technologies
-                tailored for modern healthcare excellence.
+                Share the categories, product names, quantities or specifications you are working with. Our team can use that information to prepare a more focused product enquiry.
               </p>
 
               <div className="mt-10 flex flex-wrap gap-5">
@@ -96,7 +93,7 @@ export default function CTASection({ city }) {
                   </h3>
 
                   <p className="mt-1 text-sm text-white/80">
-                    Years Experience
+                    Product Range
                   </p>
                 </div>
 
@@ -106,7 +103,7 @@ export default function CTASection({ city }) {
                   </h3>
 
                   <p className="mt-1 text-sm text-white/80">
-                    Products Delivered
+                    Product Enquiries
                   </p>
                 </div>
 
@@ -129,13 +126,11 @@ export default function CTASection({ city }) {
                   </div>
 
                   <h3 className="text-3xl font-bold text-slate-900">
-                    Let's Talk
+                    Discuss Your Requirement
                   </h3>
 
                   <p className="mt-4 leading-7 text-slate-600">
-                    Speak with our biomedical experts for consultation,
-                    installation, quotations, service support, and complete
-                    healthcare equipment solutions.
+                    Tell us what you need across instruments, kits, reagents, consumables or other biomedical supplies and we can guide the enquiry.
                   </p>
 
                   <div className="mt-8 flex flex-col gap-4">
@@ -168,7 +163,7 @@ export default function CTASection({ city }) {
       hover:shadow-2xl
       "
                       >
-                        Contact Us
+                        Send Requirement
 
                         <ArrowRight
                           size={18}
@@ -199,7 +194,7 @@ export default function CTASection({ city }) {
     hover:shadow-lg
     "
                     >
-                      📞 Call Now
+                      Call the Team
                     </a>
 
                   </div>

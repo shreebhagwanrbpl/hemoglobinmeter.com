@@ -1,5 +1,10 @@
 "use client";
-
+import { useState, useEffect } from "react";
+import PageBanner from "@/components/PageBanner";
+import SectionTitle from "@/components/SectionTitle";
+import ServiceCard from "@/components/ServiceCard";
+import CTASection from "@/components/CTASection";
+import { fetchServicesData } from "@/lib/data-fetcher";
 import {
   Microscope,
   FlaskConical,
@@ -7,79 +12,57 @@ import {
   Stethoscope,
   Wrench,
   Activity,
-  Settings2,
   BadgeCheck,
+  Settings2,
   Headphones,
   Target,
   CheckCircle2,
-  ArrowRight,
 } from "lucide-react";
 
-import PageBanner from "@/components/PageBanner";
-import SectionTitle from "@/components/SectionTitle";
-import ServiceCard from "@/components/ServiceCard";
-import CTASection from "@/components/CTASection";
+const icons = [
+  <Microscope size={30} />,
+  <FlaskConical size={30} />,
+  <ShieldCheck size={30} />,
+  <Stethoscope size={30} />,
+  <Wrench size={30} />,
+  <Activity size={30} />,
+];
 
-import { useEffect, useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+const DEFAULT_SERVICES = [
+  { title: "Catalogue Navigation", desc: "Find biomedical items by product family, application, specification or intended setting." },
+  { title: "Specification Check", desc: "Review important parameters, capacity, configuration and usage details before raising an enquiry." },
+  { title: "Multi-Item Enquiries", desc: "Combine instruments, reagents, kits, consumables and accessories into one organised requirement." },
+  { title: "Product Matching", desc: "Share your use case and preferred details so the catalogue search can be narrowed more effectively." },
+  { title: "Quotation Preparation", desc: "Prepare a clear product request with model preferences, quantities and other purchasing notes." },
+  { title: "Supply Coordination", desc: "Keep product, quantity and location information together for smoother enquiry handling." },
+];
 
 export default function ServicesPage({ city = "" }) {
-  const [services, setServices] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const icons = [
-    <Microscope size={30} />,
-    <FlaskConical size={30} />,
-    <ShieldCheck size={30} />,
-    <Stethoscope size={30} />,
-    <Wrench size={30} />,
-    <Activity size={30} />,
-  ];
+  const [services, setServices] = useState(DEFAULT_SERVICES);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchServices = async () => {
+    let isMounted = true;
+    const loadServices = async () => {
       try {
-        const snap = await getDoc(
-          doc(
-            db,
-            "websites",
-            "hemoglobinmetercom",
-            "pages",
-            "services"
-          )
-        );
-
-        if (snap.exists()) {
-          setServices(snap.data().services || []);
+        const data = await fetchServicesData();
+        if (isMounted && data && Array.isArray(data.services) && data.services.length > 0) {
+          setServices(data.services);
         }
-      } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
+      } catch (err) {
+        console.error("Services data loading error:", err);
       }
     };
 
-    fetchServices();
+    loadServices();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   return (
     <div className="site5-static">
-      {/* =====================================================
-          PAGE BANNER
-      ====================================================== */}
-      <PageBanner
-        title={
-          city
-            ? `Laboratory Equipment Services in ${city}`
-            : "Our Biomedical Services"
-        }
-        subtitle={
-          city
-            ? `Delivering trusted biomedical, laboratory, and diagnostic services in ${city} with precision, reliability, and healthcare-focused support.`
-            : "Delivering trusted biomedical, laboratory, and diagnostic services with precision, reliability, and healthcare-focused support."
-        }
-      />
+
 
       {/* =====================================================
           SERVICES INTRO + GRID
@@ -96,40 +79,40 @@ export default function ServicesPage({ city = "" }) {
           <SectionTitle
             badge={
               city
-                ? `What We Offer in ${city}`
-                : "What We Offer"
+                ? `Buyer Support in ${city}`
+                : "How We Support Product Enquiries"
             }
             title={
               city
-                ? `Complete Biomedical Services for Healthcare Facilities in ${city}`
-                : "Complete Biomedical Services for Modern Healthcare"
+                ? `Biomedical Product Support for Buyers in ${city}`
+                : "Enquiry Across the Product-Buying Journey"
             }
             description={
               city
-                ? `Our services are designed to support laboratories, hospitals, diagnostic centres, clinics, and healthcare professionals in ${city} with dependable equipment solutions and practical technical assistance.`
-                : "Our services are designed to support laboratories, hospitals, diagnostic centres, clinics, and healthcare professionals with dependable equipment solutions and practical technical assistance."
+                ? `Buyers in ${city} can use the catalogue and enquiry process for instruments, diagnostic products, reagents, consumables and other biomedical requirements.`
+                : "The support model is useful for laboratories, hospitals, clinics, institutions, dealers and other buyers handling single-item or multi-category biomedical requirements."
             }
             center
           />
 
           <div className="mx-auto mt-8 max-w-3xl text-center">
             <p className="leading-8 text-slate-600">
-              From selecting the right laboratory equipment to ongoing
-              technical support, we focus on making biomedical technology
-              easier to understand, implement, and operate. Our approach
-              combines product knowledge, healthcare requirements, and
-              customer-focused assistance.
+              Instead of assuming one standard purchase path, we help organise the information around the buyer's actual requirement: what the item is for, which specifications matter, how many units are needed and what related products may be required.
             </p>
           </div>
 
           {/* Services Grid */}
-          <div className="mt-14 grid gap-7 md:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-14 grid gap-7 md:grid-cols-2 lg:grid-cols-3 items-stretch">
 
             {loading
               ? Array.from({ length: 6 }).map((_, index) => (
                 <div
                   key={index}
                   className="
+                      h-full
+                      flex
+                      flex-col
+                      justify-between
                       animate-pulse
                       rounded-[30px]
                       border
@@ -139,25 +122,29 @@ export default function ServicesPage({ city = "" }) {
                       shadow-[0_15px_40px_rgba(15,118,110,0.08)]
                     "
                 >
-                  <div className="mb-8 h-20 w-20 rounded-3xl bg-teal-100" />
+                  <div>
+                    <div className="mb-8 h-20 w-20 rounded-3xl bg-teal-100" />
 
-                  <div className="mb-6 h-8 rounded bg-teal-100" />
+                    <div className="mb-6 h-8 rounded bg-teal-100" />
 
-                  <div className="space-y-3">
-                    <div className="h-4 rounded bg-teal-100" />
-                    <div className="h-4 w-11/12 rounded bg-teal-100" />
-                    <div className="h-4 w-8/12 rounded bg-teal-100" />
+                    <div className="space-y-3">
+                      <div className="h-4 rounded bg-teal-100" />
+                      <div className="h-4 w-11/12 rounded bg-teal-100" />
+                      <div className="h-4 w-8/12 rounded bg-teal-100" />
+                    </div>
                   </div>
+                  <div className="mt-8 h-1 w-12 rounded-full bg-teal-100" />
                 </div>
               ))
               : services.length > 0
                 ? services.map((service, index) => (
-                  <ServiceCard
-                    key={index}
-                    icon={icons[index % icons.length]}
-                    title={service.title}
-                    description={service.desc}
-                  />
+                  <div key={index} className="h-full flex">
+                    <ServiceCard
+                      icon={icons[index % icons.length]}
+                      title={service.title}
+                      description={service.desc}
+                    />
+                  </div>
                 ))
                 : (
                   <div className="col-span-full rounded-3xl border border-teal-100 bg-white p-10 text-center shadow-sm">
@@ -186,13 +173,13 @@ export default function ServicesPage({ city = "" }) {
             <div>
 
               <SectionTitle
-                badge="Why Laboratory Equipment Services"
+                badge="Why Biomedical Product Enquiry in"
                 title={
                   city
-                    ? `Support Built Around Healthcare Needs in ${city}`
-                    : "Support Built Around Real Healthcare Needs"
+                    ? `Enquiry Built Around Healthcare Needs in ${city}`
+                    : "Assistance That Starts With the Requirement"
                 }
-                description="We understand that biomedical equipment is only one part of a successful laboratory or healthcare setup. Reliable support, practical guidance, and timely assistance are equally important."
+                description="Biomedical purchasing can involve specifications, compatible supplies, quantities, application details and several product categories. Clear product information helps reduce avoidable back-and-forth during an enquiry."
               />
 
               <div className="mt-8 space-y-5">
@@ -200,23 +187,23 @@ export default function ServicesPage({ city = "" }) {
                 {[
                   {
                     icon: BadgeCheck,
-                    title: "Quality-Focused Solutions",
-                    desc: "We focus on dependable biomedical and diagnostic solutions suited to modern healthcare environments.",
+                    title: "Product Information Review",
+                    desc: "We help organise the important product details so the buyer can compare an item with the intended application.",
                   },
                   {
                     icon: Settings2,
-                    title: "Practical Technical Guidance",
-                    desc: "Our approach helps customers understand equipment capabilities, applications, and operational requirements.",
+                    title: "Specification Clarification",
+                    desc: "Questions about parameters, capacity, configuration or intended use can be included with the product enquiry.",
                   },
                   {
                     icon: Headphones,
-                    title: "Responsive Customer Support",
-                    desc: "We remain focused on helping customers with product-related queries and service requirements.",
+                    title: "Requirement Coordination",
+                    desc: "Multiple items can be grouped into a clearer request so the purchasing team can work from one requirement set.",
                   },
                   {
                     icon: Target,
-                    title: "Application-Oriented Approach",
-                    desc: "Solutions are considered around the actual laboratory workflow and healthcare application.",
+                    title: "Use-Case Matching",
+                    desc: "Product choices are considered in relation to the task, environment and workflow described by the buyer.",
                   },
                 ].map((item, index) => {
                   const Icon = item.icon;
@@ -280,7 +267,7 @@ export default function ServicesPage({ city = "" }) {
                   <h3 className="text-3xl font-bold leading-tight text-white sm:text-4xl">
                     Reliable Technology.
                     <br />
-                    Practical Support.
+                    Practical Enquiry.
                   </h3>
 
                   <p className="mt-5 leading-8 text-slate-300">
@@ -293,10 +280,10 @@ export default function ServicesPage({ city = "" }) {
                   <div className="mt-8 space-y-4">
 
                     {[
-                      "Laboratory-focused solutions",
-                      "Diagnostic equipment support",
-                      "Healthcare technology guidance",
-                      "Customer-focused assistance",
+                      "Laboratory Products",
+                      "Diagnostic Products",
+                      "Biomedical Product Guidance",
+                      "Enquiry Coordination",
                     ].map((text, index) => (
                       <div
                         key={index}
@@ -336,9 +323,9 @@ export default function ServicesPage({ city = "" }) {
         <div className="container-custom relative z-10">
 
           <SectionTitle
-            badge="Our Capabilities"
-            title="Services That Support Every Stage"
-            description="Our service approach covers the important stages involved in selecting, implementing, and maintaining biomedical and diagnostic solutions."
+            badge="What We Can Help With"
+            title="Enquiry for Different Purchase Scenarios"
+            description="From initial catalogue browsing to a detailed enquiry, the site can support different levels of biomedical purchasing research."
             center
           />
 
@@ -347,23 +334,23 @@ export default function ServicesPage({ city = "" }) {
             {[
               {
                 icon: Microscope,
-                title: "Equipment Selection",
-                desc: "Helping identify equipment based on application, laboratory requirements, capacity, and workflow.",
+                title: "Product Shortlisting",
+                desc: "Narrow down products by the application, capacity, parameters or other specifications that matter to the buyer.",
               },
               {
                 icon: FlaskConical,
-                title: "Diagnostic Solutions",
-                desc: "Supporting modern diagnostic environments with suitable laboratory technologies and systems.",
+                title: "Category Navigation",
+                desc: "Explore diagnostic, laboratory, monitoring, reagent, consumable and accessory categories without limiting the search to one product type.",
               },
               {
                 icon: Wrench,
-                title: "Technical Assistance",
-                desc: "Providing practical assistance related to biomedical equipment and operational requirements.",
+                title: "Requirement Preparation",
+                desc: "Prepare a concise request containing item names, quantities, specifications and other useful purchasing details.",
               },
               {
                 icon: Activity,
-                title: "Performance Focus",
-                desc: "Keeping reliability, consistency, and efficient healthcare workflows at the centre of our approach.",
+                title: "Enquiry Follow-through",
+                desc: "Keep the conversation centred on the requested products, specifications and intended application.",
               },
             ].map((item, index) => {
               const Icon = item.icon;
@@ -413,8 +400,8 @@ export default function ServicesPage({ city = "" }) {
 
           <SectionTitle
             badge="How We Work"
-            title="A Simple & Professional Service Process"
-            description="We follow a streamlined approach to understand requirements, recommend suitable solutions, and provide dependable support."
+            title="A Clearer Way to Raise a Requirement"
+            description="The process is designed to keep product research and communication straightforward."
             center
           />
 
@@ -426,18 +413,18 @@ export default function ServicesPage({ city = "" }) {
             {[
               {
                 step: "01",
-                title: "Consultation",
-                desc: "We understand your laboratory, diagnostic, or healthcare requirements and identify the key application needs.",
+                title: "Requirement",
+                desc: "Share the products, categories, quantities or specifications you are trying to source.",
               },
               {
                 step: "02",
-                title: "Solution Planning",
-                desc: "Based on the requirements, we help identify suitable equipment and practical biomedical solutions.",
+                title: "Product Review",
+                desc: "Review relevant catalogue options and clarify the details that affect product selection.",
               },
               {
                 step: "03",
-                title: "Support",
-                desc: "We remain focused on customer assistance and ongoing equipment-related requirements after selection.",
+                title: "Enquiry",
+                desc: "Send the final requirement so product-related questions, availability or quotation needs can be handled together.",
               },
             ].map((item, index) => (
               <div
@@ -492,7 +479,7 @@ export default function ServicesPage({ city = "" }) {
             </p>
 
             <h2 className="mt-3 text-3xl font-bold text-white sm:text-4xl">
-              Focused on Better Healthcare Support
+              Focused on Better Healthcare Enquiry
             </h2>
 
           </div>

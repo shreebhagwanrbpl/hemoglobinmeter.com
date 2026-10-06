@@ -49,21 +49,38 @@ export const metadata = {
     type: "website",
   },
 
-  twitter: {
-    card: "summary_large_image",
-    title: "Biomedical & Laboratory Equipment Supplier in India | Raj Biosis",
-    description: defaultDescription,
-    images: ["/logo.png"],
-  },
-
   alternates: {
     canonical: SITE_URL,
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }) {
+  let contactData = null;
+  try {
+    contactData = await fetchContactData();
+  } catch (e) {
+    // ignore
+  }
+
+  const info = contactData?.contactInfo || [];
+  const getContactField = (labels) => {
+    const normalized = labels.map((l) => l.toLowerCase().trim());
+    const found = info.find(
+      (x) => x && x.label && normalized.includes(x.label.toLowerCase().trim())
+    );
+    if (!found || !found.value) return "";
+    if (Array.isArray(found.value)) {
+      return found.value[0] || "";
+    }
+    return String(found.value);
+  };
+
+  const address = getContactField(["address", "office address", "location"]);
+  const phone = getContactField(["phone", "phone number", "contact number", "mobile", "mobile no"]);
+  const email = getContactField(["email", "email address", "email for reply", "mail"]);
+
   const orgSchema = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -71,30 +88,24 @@ export default function RootLayout({
     "url": SITE_URL,
     "logo": `${SITE_URL}/logo.png`,
     "description": defaultDescription,
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "F-4, 1st Floor, Plot No. 16, D-Block Tagor Nagar, on Ajmer-Delhi, 200 Feet Bypass Rd, Jaipur",
-      "addressLocality": "Jaipur",
-      "addressRegion": "Rajasthan",
-      "postalCode": "302021",
-      "addressCountry": "IN"
-    },
-    "contactPoint": [
-      {
-        "@type": "ContactPoint",
-        "telephone": "+91-9983123469",
-        "contactType": "sales",
-        "email": "rajbiosis@yahoo.in",
-        "areaServed": "IN"
-      },
-      {
-        "@type": "ContactPoint",
-        "telephone": "+91-9983333489",
-        "contactType": "technical support",
-        "email": "rajbiosis@yahoo.in",
-        "areaServed": "IN"
+    ...(address ? {
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": address,
+        "addressCountry": "IN"
       }
-    ]
+    } : {}),
+    ...((phone || email) ? {
+      "contactPoint": [
+        {
+          "@type": "ContactPoint",
+          ...(phone ? { "telephone": phone } : {}),
+          "contactType": "sales & customer support",
+          ...(email ? { "email": email } : {}),
+          "areaServed": "IN"
+        }
+      ]
+    } : {})
   };
 
   const webSiteSchema = {

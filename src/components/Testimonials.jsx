@@ -1,27 +1,26 @@
 "use client";
-
 import { motion } from "framer-motion";
 import SectionTitle from "./SectionTitle";
 
 export default function Testimonials() {
   const reviews = [
     {
-      name: "Dr. Rajesh Kumar",
-      role: "Healthcare Specialist",
+      name: "Laboratory Procurement Team",
+      role: "Diagnostic Facility",
       review:
-        "Raj Biosis has consistently delivered reliable diagnostic equipment with outstanding support.",
+        "The catalogue helped us narrow a mixed requirement list before we sent the final enquiry.",
     },
     {
       name: "Amit Sharma",
       role: "Lab Director",
       review:
-        "Professional service, premium products, and excellent biomedical consultation experience.",
+        "Having specifications and product categories together made our purchasing discussion more organised.",
     },
     {
       name: "Neha Verma",
       role: "Research Head",
       review:
-        "Their healthcare solutions improved our laboratory efficiency significantly.",
+        "We could review several biomedical requirements from one place instead of treating each item as a separate search.",
     },
   ];
 
@@ -39,8 +38,8 @@ export default function Testimonials() {
 
         <SectionTitle
           badge="Testimonials"
-          title="What Our Clients Say"
-          description="Trusted by healthcare professionals, laboratories, and biomedical institutions."
+          title="Buyer Perspectives"
+          description="Examples of how different organisations can use a multi-category biomedical catalogue."
           center
         />
 

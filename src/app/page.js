@@ -9,22 +9,22 @@ import SeoContent from "@/components/SeoContent";
 import { SITE_URL, SITE_NAME } from "@/lib/seo";
 
 export const metadata = {
-  title: "Biomedical & Laboratory Equipment Distributor | Raj Biosis",
-  description: "Raj Biosis is a leading supplier and distributor of medical laboratory machines, cbc counters, biochemistry analyzers, and advanced diagnostic equipment in India.",
+  title: "Biomedical Product Catalogue & Sourcing Desk | Raj Biosis",
+  description: "Raj Biosis brings together biomedical devices, laboratory supplies, diagnostic systems, reagents, consumables and healthcare equipment for organisations sourcing products across India.",
   alternates: {
     canonical: SITE_URL,
   },
   openGraph: {
-    title: "Biomedical & Laboratory Equipment Distributor | Raj Biosis",
-    description: "Raj Biosis is a leading supplier and distributor of medical laboratory machines, cbc counters, biochemistry analyzers, and advanced diagnostic equipment in India.",
+    title: "Biomedical Product Catalogue & Sourcing Desk | Raj Biosis",
+    description: "Raj Biosis brings together biomedical devices, laboratory supplies, diagnostic systems, reagents, consumables and healthcare equipment for organisations sourcing products across India.",
     url: SITE_URL,
     siteName: SITE_NAME,
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "Biomedical & Laboratory Equipment Distributor | Raj Biosis",
-    description: "Raj Biosis is a leading supplier and distributor of medical laboratory machines, cbc counters, biochemistry analyzers, and advanced diagnostic equipment in India.",
+    title: "Biomedical Product Catalogue & Sourcing Desk | Raj Biosis",
+    description: "Raj Biosis brings together biomedical devices, laboratory supplies, diagnostic systems, reagents, consumables and healthcare equipment for organisations sourcing products across India.",
   }
 };
 

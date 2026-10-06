@@ -14,7 +14,7 @@ export default function SeoContent({ city = "" }) {
           },
           {
             q: `How can healthcare labs in ${city} get a quotation?`,
-            a: `Pathology labs, clinics, and hospitals in ${city} can request a quick quotation by submitting our online contact form, emailing us at rajbiosis@yahoo.in, or calling our sales support team.`
+            a: `Pathology labs, clinics, and hospitals in ${city} can request a quick quotation by submitting our online contact form or contacting our sales support team.`
           },
           {
             q: `Do you offer local maintenance and service contracts (AMC) in ${city}?`,
@@ -23,20 +23,20 @@ export default function SeoContent({ city = "" }) {
         ]
       : [
           {
-            q: "Do you supply biomedical equipment across India?",
-            a: "Yes, we supply biomedical and laboratory equipment across multiple districts and cities throughout India."
+            q: "Can I enquire about more than one biomedical product at once?",
+            a: "Yes. A single enquiry can include several categories or product types, along with quantities and preferred specifications."
           },
           {
-            q: "Which laboratory instruments do you provide?",
-            a: "We provide CBC Machines, Hematology Analyzers, Biochemistry Analyzers, ELISA Readers, Urine Analyzers and other diagnostic equipment."
+            q: "What kinds of items can I find in the catalogue?",
+            a: "The catalogue can cover instruments, diagnostic kits, reagents, consumables, monitoring products, laboratory accessories and other biomedical items, subject to the published inventory."
           },
           {
-            q: "Do you provide installation support?",
-            a: "Yes, installation assistance and technical support are available depending on location and equipment type."
+            q: "Can you help me understand product specifications?",
+            a: "Product enquiries can include questions about parameters, capacity, configuration, application and other selection details. Any service arrangement depends on the item and location."
           },
           {
-            q: "Who can purchase biomedical equipment?",
-            a: "Hospitals, pathology labs, diagnostic centres, research laboratories and healthcare facilities can purchase equipment from us."
+            q: "Who can use this product catalogue?",
+            a: "Hospitals, laboratories, clinics, educational or research facilities, dealers and other organisations sourcing biomedical products can use the catalogue for enquiries."
           }
         ];
 
@@ -69,7 +69,7 @@ export default function SeoContent({ city = "" }) {
                 <h2 className="max-w-4xl text-4xl font-bold leading-tight lg:text-5xl">
 
                     <span className="bg-gradient-to-r from-[#0F766E] via-[#0D9488] to-[#14B8A6] bg-clip-text text-transparent">
-                        Biomedical Equipment Supplier
+                        Biomedical Product Sourcing in
                     </span>
 
                     <span className="text-slate-900">
@@ -86,11 +86,7 @@ export default function SeoContent({ city = "" }) {
 
                     <p className="rounded-3xl border border-teal-100 bg-white/80 p-6 shadow-sm backdrop-blur-xl">
 
-                        Raj Biosis is a trusted supplier of biomedical and
-                        laboratory equipment in {location}. We provide CBC Machines,
-                        Hematology Analyzers, Biochemistry Analyzers, Urine Analyzers,
-                        ELISA Readers and diagnostic instruments for hospitals,
-                        pathology labs and healthcare facilities.
+                        Raj Biosis provides a multi-category biomedical catalogue for organisations in {location}. The range can include laboratory instruments, diagnostic products, reagents, test systems, consumables, monitoring devices and related healthcare supplies.
 
                     </p>
 
@@ -98,10 +94,7 @@ export default function SeoContent({ city = "" }) {
 
                     <p className="rounded-3xl border border-teal-100 bg-white/80 p-6 shadow-sm backdrop-blur-xl">
 
-                        Our mission is to provide reliable and high-quality laboratory
-                        equipment to healthcare professionals across India. We work
-                        with diagnostic centres, hospitals, research laboratories and
-                        medical institutions to deliver advanced biomedical solutions.
+                        The catalogue is intended for different purchasing situations, including laboratory setup, replacement of existing equipment, routine supply needs, department expansion and mixed-item procurement. Product selection can be based on application and specification rather than one fixed product family.
 
                     </p>
 
@@ -109,11 +102,7 @@ export default function SeoContent({ city = "" }) {
 
                     <p className="rounded-3xl border border-teal-100 bg-white/80 p-6 shadow-sm backdrop-blur-xl">
 
-                        We offer installation assistance, product guidance and
-                        technical support for a wide range of laboratory instruments.
-                        Whether you are setting up a new diagnostic laboratory or
-                        upgrading existing equipment, our team can help you select the
-                        right solution.
+                        For equipment and supplies that require closer review, buyers can share their intended use, preferred specifications or required quantities. This helps turn a broad catalogue search into a more relevant enquiry.
 
                     </p>
 
@@ -121,9 +110,7 @@ export default function SeoContent({ city = "" }) {
 
                     <p className="rounded-3xl border border-teal-100 bg-white/80 p-6 shadow-sm backdrop-blur-xl">
 
-                        Raj Biosis supplies equipment across multiple
-                        districts and cities, helping healthcare providers improve
-                        testing efficiency and diagnostic accuracy.
+                        The website supports enquiries from multiple locations and is designed for buyers looking for individual products as well as broader biomedical requirements.
 
                     </p>
 
@@ -144,7 +131,7 @@ export default function SeoContent({ city = "" }) {
                     <h2 className="text-3xl font-bold lg:text-4xl">
 
                         <span className="bg-gradient-to-r from-[#0F766E] to-[#14B8A6] bg-clip-text text-transparent">
-                            Frequently Asked Questions
+                            Common Catalogue Questions
                         </span>
 
                     </h2>

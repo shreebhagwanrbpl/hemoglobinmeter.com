@@ -1,5 +1,4 @@
 "use client";
-
 import React, { useEffect, useMemo, useState, useCallback, memo, Profiler } from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -320,7 +319,7 @@ export default function ProductsClient({ initialProducts = [], district = null, 
       {/* Banner */}
       {/* <PageBanner
         title={city ? `Our Products in ${city}` : "Our Products"}
-        subtitle="Explore advanced biomedical and diagnostic equipment designed for modern healthcare excellence."
+        subtitle="Explore products across laboratory, diagnostic, monitoring, consumable and other biomedical categories."
       /> */}
       <script
         type="application/ld+json"
@@ -331,7 +330,7 @@ export default function ProductsClient({ initialProducts = [], district = null, 
             name: "Raj Biosis",
             url: "https://hemoglobinmeter.com",
             areaServed: city,
-            description: `Medical laboratory and hospital equipment in ${city}`,
+            description: `Biomedical products for healthcare and laboratory use in ${city}`,
             address: {
               "@type": "PostalAddress",
               addressLocality: city,
@@ -353,19 +352,13 @@ export default function ProductsClient({ initialProducts = [], district = null, 
         }}
       />
 
-      {/* Banner */}
-      <PageBanner
-        title={city ? `Biomedical Equipment in ${city}` : "Biomedical Equipment"}
-        subtitle={city ? `Discover high-quality diagnostic and biomedical technologies tailored for laboratories and diagnostic institutions in ${city}.` : "Discover high-quality diagnostic and biomedical technologies tailored for laboratories, healthcare institutions, and modern diagnostics."}
-      />
-
       {/* Products */}
       <section className="section-padding bg-white">
         <div className="container-custom">
           <SectionTitle
             badge="Featured Products"
-            title="Premium Biomedical Equipment"
-            description="Discover high-quality diagnostic and biomedical technologies tailored for laboratories, healthcare institutions, and modern diagnostics."
+            title="Browse Biomedical Products"
+            description="Browse biomedical products across instruments, diagnostic items, laboratory supplies and related categories."
             center
           />
         </div>
@@ -537,9 +530,9 @@ export default function ProductsClient({ initialProducts = [], district = null, 
       <section className="section-padding bg-[#F0FDFA]">
         <div className="container-custom">
           <SectionTitle
-            badge="Why Our Products"
-            title="Trusted Quality & Innovation"
-            description="We provide biomedical products designed for performance, reliability, and healthcare excellence."
+            badge="Why Product Details Matter"
+            title="Product Information at a Glance"
+            description="Clear product details help buyers compare categories, specifications and intended applications."
             center
           />
 
@@ -547,19 +540,19 @@ export default function ProductsClient({ initialProducts = [], district = null, 
             {[
               {
                 icon: <ShieldCheck size={30} />,
-                title: "Certified Quality",
+                title: "Product Details",
               },
               {
                 icon: <Truck size={30} />,
-                title: "Fast Delivery",
+                title: "Order Information",
               },
               {
                 icon: <BadgeCheck size={30} />,
-                title: "Trusted Support",
+                title: "Enquiry Help",
               },
               {
                 icon: <PackageCheck size={30} />,
-                title: "Premium Equipment",
+                title: "Category Variety",
               },
             ].map((item, index) => (
               <div

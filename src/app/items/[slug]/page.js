@@ -38,8 +38,8 @@ export async function generateMetadata({ params }) {
     const description =
         product.desc ||
         product.description ||
-        `Buy high-quality ${product.title} ${product.brand ? `by ${product.brand}` : ""
-        } model ${product.model || ""} from Raj Biosis. Trusted laboratory and medical diagnostic equipment supplier.`;
+        `Explore ${product.title} ${product.brand ? `by ${product.brand}` : ""
+        } model ${product.model || ""} from Raj Biosis. Biomedical product catalogue and enquiry resource.`;
 
     const url = `${SITE_URL}/items/${slug}`;
 

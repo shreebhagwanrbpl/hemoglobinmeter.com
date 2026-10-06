@@ -1,8 +1,5 @@
 "use client";
-
 import { useEffect, useState } from "react";
-import { doc, getDoc } from "firebase/firestore";
-import { db } from "@/lib/firebase";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -11,7 +8,7 @@ import {
   MapPin,
 } from "lucide-react";
 import { FaFacebookF, FaInstagram } from "react-icons/fa";
-import { fetchFullCatalog } from "@/lib/data-fetcher";
+import { fetchFullCatalog, fetchContactData, fetchDistrictData } from "@/lib/data-fetcher";
 
 export default function Footer() {
   const [contactInfo, setContactInfo] = useState([]);
@@ -40,58 +37,45 @@ export default function Footer() {
       : "";
 
   useEffect(() => {
+    let isMounted = true;
     const loadContact = async () => {
       try {
-        const snap = await getDoc(
-          doc(
-            db,
-            "websites",
-            "hemoglobinmetercom",
-            "pages",
-            "contact"
-          )
-        );
-
-        if (snap.exists()) {
-          setContactInfo(
-            snap.data().contactInfo || []
-          );
+        const data = await fetchContactData();
+        if (isMounted && data) {
+          setContactInfo(data.contactInfo || []);
         }
-
-        setLoading(false);
       } catch (err) {
-        console.log(err);
-        setLoading(false);
+        console.error("Footer contact data error:", err);
+      } finally {
+        if (isMounted) setLoading(false);
       }
     };
 
     loadContact();
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   useEffect(() => {
+    if (!district) return;
+    let isMounted = true;
+
     const loadDistrict = async () => {
-      if (!district) return;
-
       try {
-        const snap = await getDoc(
-          doc(
-            db,
-            "websites",
-            "hemoglobinmetercom",
-            "districts",
-            district
-          )
-        );
-
-        if (snap.exists()) {
-          setDistrictData(snap.data());
+        const data = await fetchDistrictData(district);
+        if (isMounted && data) {
+          setDistrictData(data);
         }
       } catch (err) {
-        console.log(err);
+        console.error("Footer district data error:", err);
       }
     };
 
     loadDistrict();
+    return () => {
+      isMounted = false;
+    };
   }, [district]);
 
   useEffect(() => {
@@ -109,27 +93,31 @@ export default function Footer() {
     loadCategories();
   }, []);
 
-  const getContactField = (labels, defaultValue) => {
+  const getContactField = (labels, defaultValue = "") => {
     const normalized = labels.map((l) => l.toLowerCase().trim());
     const found = contactInfo.find(
       (x) => x && x.label && normalized.includes(x.label.toLowerCase().trim())
     );
-    return found ? found.value : defaultValue;
+    if (!found || !found.value) return defaultValue;
+    if (Array.isArray(found.value)) {
+      return found.value.join("\n");
+    }
+    return found.value;
   };
 
   const phone = getContactField(
-    ["phone", "phone number", "contact number"],
-    "+91 9983123469\n+91 9983333489"
+    ["phone", "phone number", "contact number", "mobile", "mobile no", "contact"],
+    ""
   );
 
   const email = getContactField(
-    ["email", "email address", "email for reply"],
-    "rajbiosis@yahoo.in"
+    ["email", "email address", "email for reply", "mail"],
+    ""
   );
 
   const address = getContactField(
-    ["address", "office address"],
-    "F-4, 1st Floor, Plot No. 16, D-Block Tagor Nagar, on Ajmer-Delhi, 200 Feet Bypass Rd, Jaipur, Rajasthan 302021"
+    ["address", "office address", "location"],
+    ""
   );
 
   const dynamicAddress =
@@ -199,10 +187,7 @@ export default function Footer() {
 
 
             <p className="mt-5 text-slate-600 leading-7">
-              Delivering trusted diagnostic
-              and biomedical solutions with
-              innovation, quality, and
-              precision healthcare support.
+              A multi-category biomedical product catalogue covering equipment, diagnostic products, laboratory supplies, reagents, consumables and related healthcare items.
             </p>
 
             {/* Social Icons */}
@@ -307,10 +292,10 @@ export default function Footer() {
 
               {categories.length === 0 && (
                 <>
-                  <p>Diagnostic Equipment</p>
-                  <p>Laboratory Solutions</p>
-                  <p>Biomedical Instruments</p>
-                  <p>Maintenance Support</p>
+                  <p>Diagnostic Products</p>
+                  <p>Laboratory Products</p>
+                  <p>Biomedical Items</p>
+                  <p>Product Assistance</p>
                 </>
               )}
 
@@ -332,67 +317,60 @@ export default function Footer() {
 
             <div className="space-y-4 text-slate-600">
 
+              {dynamicAddress && (
+                <div className="flex items-start gap-4">
+                  <div className="
+      w-12
+      h-12
+      rounded-2xl
+      bg-teal-50
+      flex
+      items-center
+      justify-center
+      flex-shrink-0
+    ">
+                    <MapPin
+                      size={24}
+                      className="text-[#0F766E]"
+                    />
+                  </div>
 
-              <div className="flex items-start gap-4">
+                  <p className="leading-7 pt-2">
+                    {dynamicAddress}
+                  </p>
+                </div>
+              )}
 
-                <div className="
-    w-12
-    h-12
-    rounded-2xl
-    bg-teal-50
-    flex
-    items-center
-    justify-center
-    flex-shrink-0
-  ">
-                  <MapPin
-                    size={24}
+              {phoneNumbers.length > 0 && (
+                <div className="flex flex-col gap-2">
+                  {phoneNumbers.map((num, i) => (
+                    <div key={i} className="flex items-center gap-3">
+                      <Phone
+                        size={18}
+                        className="text-[#0F766E] flex-shrink-0"
+                      />
+                      <a href={`tel:${num}`} className="hover:text-[#0F766E] transition">
+                        {num}
+                      </a>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {email && (
+                <div className="flex items-center gap-3">
+                  <Mail
+                    size={18}
                     className="text-[#0F766E]"
                   />
-                </div>
 
-                <p className="leading-7 pt-2">
-                  {dynamicAddress}
-                </p>
-
-              </div>
-
-
-
-
-              <div className="flex flex-col gap-2">
-                {phoneNumbers.map((num, i) => (
-                  <div key={i} className="flex items-center gap-3">
-                    <Phone
-                      size={18}
-                      className="text-[#0F766E] flex-shrink-0"
-                    />
-                    <a href={`tel:${num}`} className="hover:text-[#0F766E] transition">
-                      {num}
+                  <p>
+                    <a href={`mailto:${email}`} className="hover:text-[#0F766E] transition">
+                      {email}
                     </a>
-                  </div>
-                ))}
-              </div>
-
-
-
-
-              <div className="flex items-center gap-3">
-
-                <Mail
-                  size={18}
-                  className="text-[#0F766E]"
-                />
-
-                <p>
-                  <a href={`mailto:${email}`} className="hover:text-[#0F766E] transition">
-                    {email}
-                  </a>
-                </p>
-
-              </div>
-
-
+                  </p>
+                </div>
+              )}
 
             </div>
 
@@ -416,8 +394,7 @@ export default function Footer() {
 
 
           <p className="mt-3 md:mt-0">
-            Designed with precision for
-            modern diagnostics.
+            Built for practical biomedical product discovery.
           </p>
 
 

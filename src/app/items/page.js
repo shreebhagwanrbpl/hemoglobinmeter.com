@@ -6,18 +6,18 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 export const metadata = {
-  title: "Premium Biomedical & Diagnostic Equipment",
+  title: "Biomedical Product Catalogue",
   description:
-    "Browse our dynamic catalog of premium diagnostic technologies, cbc counters, biochemistry analyzers, and laboratory equipment from Raj Biosis.",
+    "Explore a broad catalogue of biomedical products including instruments, diagnostic items, reagents, kits, consumables and related healthcare supplies.",
 
   alternates: {
     canonical: `${SITE_URL}/items`,
   },
 
   openGraph: {
-    title: `Premium Biomedical & Diagnostic Equipment | ${SITE_NAME}`,
+    title: `Biomedical Product Catalogue | ${SITE_NAME}`,
     description:
-      "Browse our dynamic catalog of premium diagnostic technologies, cbc counters, biochemistry analyzers, and laboratory equipment from Raj Biosis.",
+      "Explore a broad catalogue of biomedical products including instruments, diagnostic items, reagents, kits, consumables and related healthcare supplies.",
     url: `${SITE_URL}/items`,
     siteName: SITE_NAME,
     type: "website",
@@ -25,9 +25,9 @@ export const metadata = {
 
   twitter: {
     card: "summary_large_image",
-    title: `Premium Biomedical & Diagnostic Equipment | ${SITE_NAME}`,
+    title: `Biomedical Product Catalogue | ${SITE_NAME}`,
     description:
-      "Browse our dynamic catalog of premium diagnostic technologies, cbc counters, biochemistry analyzers, and laboratory equipment from Raj Biosis.",
+      "Explore a broad catalogue of biomedical products including instruments, diagnostic items, reagents, kits, consumables and related healthcare supplies.",
   },
 };
 

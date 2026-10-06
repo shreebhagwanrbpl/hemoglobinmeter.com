@@ -2,11 +2,11 @@
 import { motion } from "framer-motion";
 export default function TrustedBrands() {
   const brands = [
-    "HealthCare+",
-    "BioMed Labs",
-    "MediCore",
-    "Life Diagnostics",
-    "Care Plus",
+    "Diagnostic Systems",
+    "Laboratory Instruments",
+    "Reagents & Kits",
+    "Monitoring Devices",
+    "Consumables & Supplies",
   ];
 
   return (
@@ -29,9 +29,7 @@ export default function TrustedBrands() {
       font-semibold
       text-[#0F766E]
     ">
-          Trusted by Healthcare &
-          <br className="sm:hidden" />
-          Biomedical Organizations
+          Product Categories at a Glance
         </p>
 
 

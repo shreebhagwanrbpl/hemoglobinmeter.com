@@ -11,7 +11,7 @@ export async function generateMetadata({ params }) {
   return {
     title: `Biomedical & Diagnostic Equipment Supplier in ${districtName} | Raj Biosis`,
 
-    description: `Raj Biosis supplies diagnostic machines, laboratory equipment, reagents and biomedical products in ${districtName}.`,
+    description: `Raj Biosis provides a broad biomedical product catalogue for buyers in ${districtName}, covering equipment, diagnostic items, supplies and related products.`,
 
     keywords: [
       `Biomedical Equipment ${districtName}`,
@@ -32,7 +32,7 @@ export async function generateMetadata({ params }) {
 
     openGraph: {
       title: `Biomedical Equipment in ${districtName}`,
-      description: `Diagnostic laboratory equipment supplier in ${districtName}.`,
+      description: `Biomedical product catalogue and enquiry resource for ${districtName}.`,
       url,
       type: "website",
     },
